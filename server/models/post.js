@@ -13,11 +13,11 @@ const postSchema = new Schema({
   },
   createdAt:{
     type:Date,
-    default: DataTransfer.now
+    default: Date.now
   },
   updatedAt:{
     type:Date,
-    default: DataTransfer.now
+    default: Date.now
   }
 });
 
