@@ -1,11 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const expressLayout = require('express-ejs-layouts');
+const methodOverride = require('method-override');
 const session = require('express-session');
 const connectDB = require('./server/config/db');
 const cookieParser = require('cookie-parser');
 const MongoStore = require('connect-mongo');
-
+const {isActiveRoute} = require('./server/helpers/routerHelpers');
 const app = express();
 const PORT = 5000 || process.env.PORT;
 
@@ -29,9 +30,13 @@ app.use(session({
 app.use(express.static('public'));
 
 
+app.locals.isActiveRoute = isActiveRoute;
+
+
 
 
 app.use(expressLayout);
+app.use(methodOverride('_method'));
 app.set('layout', './layouts/main');
 app.set('view engine','ejs');
 
