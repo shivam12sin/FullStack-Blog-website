@@ -29,6 +29,10 @@ app.use(session({
 
 app.use(express.static('public'));
 
+app.use((req, res, next) => {
+  res.locals.currentRoute = req.path;
+  next();
+});
 
 app.locals.isActiveRoute = isActiveRoute;
 
