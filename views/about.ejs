@@ -1,1 +1,22 @@
-<h1>About</h1>
+<!-- views/about.ejs -->
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+  <h1 class="mb-4">About This Blog</h1>
+  <p>This blog website is built using Node.js, Express, MongoDB, and EJS. It allows admins to manage blog posts through a secure dashboard, while visitors can read content easily on the frontend.</p>
+  
+  <h3 class="mt-4">🛠 Tech Stack:</h3>
+  <ul>
+    <li>Node.js + Express</li>
+    <li>MongoDB + Mongoose</li>
+    <li>EJS Templating</li>
+    <li>JWT for Authentication</li>
+    <li>Bcrypt for Secure Passwords</li>
+  </ul>
+
+  <h3 class="mt-4">👨‍💻 Author</h3>
+  <p>Built with ❤️ by <strong>Shivam Singh</strong></p>
+  <p>GitHub: <a href="https://github.com/shivam12sin" target="_blank">shivam12sin</a></p>
+</div>
+
+<%- include('partials/footer') %>
