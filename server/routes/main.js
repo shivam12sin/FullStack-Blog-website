@@ -95,4 +95,18 @@ router.get('/about',(req,res)=>{
 });
 
 
+router.get('/contact', (req, res) => {
+  res.render('contact');
+});
+
+router.post('/contact', (req, res) => {
+  const { name, email, message } = req.body;
+
+  console.log('Contact Form Submission:', { name, email, message });
+
+  // For now just redirect back to home (or show success)
+  res.send('Thanks for contacting me! I will get back to you soon.');
+});
+
+
 module.exports = router;
