@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const MongoStore = require('connect-mongo');
 const {isActiveRoute} = require('./server/helpers/routerHelpers');
 const app = express();
-const PORT = 5000 || process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 
 //connect to DB
