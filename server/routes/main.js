@@ -2,6 +2,7 @@ const express = require('express');
 // const { model } = require('mongoose');
 const router  = express.Router();
 const Post = require('../models/post');
+const nodemailer = require('nodemailer');
 
 
 router.get('',async(req ,res)=>{
@@ -99,13 +100,32 @@ router.get('/contact', (req, res) => {
   res.render('contact');
 });
 
-router.post('/contact', (req, res) => {
+router.post('/contact', async (req, res) => {
   const { name, email, message } = req.body;
 
-  console.log('Contact Form Submission:', { name, email, message });
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-  // For now just redirect back to home (or show success)
-  res.send('Thanks for contacting me! I will get back to you soon.');
+    const mailOptions = {
+      from: email,
+      to: process.env.EMAIL_USER,
+      subject: `New message from ${name}`,
+      text: `You received a new message from your blog contact form:\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.send('✅ Message sent successfully!');
+  } catch (error) {
+    console.error('❌ Email send failed:', error);
+    res.status(500).send('Something went wrong. Please try again later.');
+  }
 });
 
 
