@@ -3,6 +3,8 @@ const express = require('express');
 const router  = express.Router();
 const Post = require('../models/post');
 const nodemailer = require('nodemailer');
+const marked = require('marked');
+
 
 
 router.get('',async(req ,res)=>{
@@ -44,18 +46,22 @@ router.get('/post/:id', async (req, res) => {
     const locals = {
       title: data.title,
       description: "Simple Blog created with NodeJs, Express & MongoDb.",
-      currentRoute:`/post/${slug}`
-    }
+      currentRoute: `/post/${slug}`
+    };
+
+    // Parse Markdown into HTML
+    const content = marked.parse(data.body);
 
     res.render('post', { 
       locals,
+      content, // pass HTML content
       data,
       currentRoute: `/post/${slug}`
     });
+
   } catch (error) {
     console.log(error);
   }
-
 });
 
 
