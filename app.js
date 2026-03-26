@@ -29,8 +29,21 @@ app.use(session({
 
 app.use(express.static('public'));
 
+const jwt = require('jsonwebtoken');
+
 app.use((req, res, next) => {
   res.locals.currentRoute = req.path;
+  res.locals.userLoggedIn = false;
+  
+  const token = req.cookies.token;
+  if (token) {
+    try {
+      jwt.verify(token, process.env.JWT_SECRET);
+      res.locals.userLoggedIn = true;
+    } catch (error) {
+      // Token invalid or expired
+    }
+  }
   next();
 });
 
@@ -45,7 +58,8 @@ app.set('layout', './layouts/main');
 app.set('view engine','ejs');
 
 app.use('/',require('./server/routes/main'));
-app.use('/',require('./server/routes/admin'));
+app.use('/',require('./server/routes/auth'));
+app.use('/',require('./server/routes/dashboard'));
 
 app.listen(PORT,()=>{
   console.log(`App listening on port ${PORT}`);

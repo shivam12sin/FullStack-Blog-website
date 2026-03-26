@@ -1,10 +1,7 @@
 <div class="author">
-  <h1 class="author__heading">Hi,I am Shiv</h1>
-  <p class="author__body">Web developer and Cs Student</p>
+  <h1 class="author__heading" style="font-size: clamp(2.5rem, 5vw, 4rem); background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Writer's Network</h1>
+  <p class="author__body">Discover ideas, stories, and expertise from writers everywhere.</p>
 </div>
-
-<img src="/img/hero-image.webp" alt="person looking out through window" class="hero-image"
-width="981" height="528" >
 
 <section class="articles">
   <h2 class="articles__heading">Latest Posts</h2>
@@ -13,6 +10,9 @@ width="981" height="528" >
     <li>
       <a href="/post/<%= post._id %>">
         <span><%= post.title %></span>
+        <% if (post.author) { %>
+          <span class="article-author-tag">by <%= post.author.username %></span>
+        <% } %>
         <span class="article-list__date"><%= post.createdAt.toDateString() %></span>
       </a>
     </li>

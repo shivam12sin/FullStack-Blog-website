@@ -16,7 +16,7 @@ router.get('',async(req ,res)=>{
   let perPage =10;
   let page = req.query.page || 1;
 
-  const data = await Post.aggregate([{$sort:{createdAt:-1}}]).skip(perPage*page-perPage).limit(perPage).exec();
+  const data = await Post.find().sort({ createdAt: -1 }).skip(perPage * page - perPage).limit(perPage).populate('author', 'username').lean().exec();
 
   const count = await Post.countDocuments({});
   const nextPage = parseInt(page)+1;
@@ -24,6 +24,7 @@ router.get('',async(req ,res)=>{
 
 
 
+    res.set('Cache-Control', 'public, max-age=60'); // Keep in cache for 60 seconds
     res.render('index',{
       locals,
       data,
@@ -41,7 +42,7 @@ router.get('/post/:id', async (req, res) => {
   try {
     let slug = req.params.id;
 
-    const data = await Post.findById({ _id: slug });
+    const data = await Post.findById(slug).populate('author', 'username').lean();
 
     const locals = {
       title: data.title,
@@ -52,6 +53,7 @@ router.get('/post/:id', async (req, res) => {
     // Parse Markdown into HTML
     const content = marked.parse(data.body);
 
+    res.set('Cache-Control', 'public, max-age=300'); // Cache static content for 5 minutes
     res.render('post', { 
       locals,
       content, // pass HTML content
@@ -81,7 +83,7 @@ router.post('/search',async(req,res)=>{
           {title:{$regex:new RegExp(searchNoSpecialChar,'i')}},
           {body:{$regex:new RegExp(searchNoSpecialChar,'i')}}
         ]
-      });
+      }).populate('author', 'username').lean();
 
       res.render("search",{data,locals});
       

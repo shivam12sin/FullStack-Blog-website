@@ -1,0 +1,46 @@
+<div class="auth-container">
+  <!-- Login Section -->
+  <div id="loginSection">
+    <h3>Sign In to Writer's Network</h3>
+    <form action="/login" method="post">
+      <label for="username"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="username" required>
+
+      <label for="password"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" required>
+
+      <input type="submit" value="Login" class="btn" style="width: 100%;">
+    </form>
+    
+    <div style="margin-top: 2rem; text-align: center;">
+      <p style="color: var(--text-muted); margin-bottom: 0.5rem;">Don't have an account?</p>
+      <button type="button" class="btn" onclick="toggleAuth('register')" style="background: transparent; border: 1px solid var(--surface-border); width: 100%;">Create an Account</button>
+    </div>
+  </div>
+
+  <!-- Register Section -->
+  <div id="registerSection" style="display: none;">
+    <h3>Join Writer's Network</h3>
+    <form action="/register" method="post">
+      <label for="username"><b>Choose a Username</b></label>
+      <input type="text" placeholder="Enter Username" name="username" required>
+
+      <label for="password"><b>Choose a Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" required>
+
+      <input type="submit" value="Register" class="btn" style="width: 100%;">
+    </form>
+    
+    <div style="margin-top: 2rem; text-align: center;">
+      <p style="color: var(--text-muted); margin-bottom: 0.5rem;">Already have an account?</p>
+      <button type="button" class="btn" onclick="toggleAuth('login')" style="background: transparent; border: 1px solid var(--surface-border); width: 100%;">Sign In</button>
+    </div>
+  </div>
+
+  <script>
+    function toggleAuth(mode) {
+      document.getElementById('loginSection').style.display = mode === 'login' ? 'block' : 'none';
+      document.getElementById('registerSection').style.display = mode === 'register' ? 'block' : 'none';
+    }
+  </script>
+</div>

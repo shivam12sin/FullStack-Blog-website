@@ -2,7 +2,7 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-  <a href="http:/" class="header__logo">NodeJs</a>
+  <a href="/" class="header__logo">NodeJs <span class="mode-badge">Read</span></a>
 
   <nav class="header__nav">
     <ul>
@@ -15,6 +15,18 @@
       <li>
         <a href="/contact" class="<%= isActiveRoute('/contact',currentRoute)%>">Contact</a>
       </li>
+      <% if (locals.userLoggedIn) { %>
+        <li>
+          <a href="/dashboard" class="<%= isActiveRoute('/dashboard',currentRoute)%>">Dashboard</a>
+        </li>
+        <li>
+          <a href="/logout">Logout</a>
+        </li>
+      <% } else { %>
+        <li>
+          <a href="/login" class="<%= isActiveRoute('/login',currentRoute)%>">Write</a>
+        </li>
+      <% } %>
     </ul>
   </nav>
 
