@@ -8,15 +8,15 @@
   <ul class="article-ul">
     <% data.forEach(post => { %>
     <li>
-      <a href="/post/<%= post._id %>">
-        <span><%= post.title %></span>
-        <% if (post.author) { %>
-          <a href="/author/<%= post.author._id %>" style="text-decoration: none;">
-            <span class="article-author-tag">by <%= post.author.username %></span>
-          </a>
-        <% } %>
-        <span class="article-list__date"><%= post.createdAt.toDateString() %></span>
+      <a href="/post/<%= post._id %>" style="text-decoration: none; display: block;">
+        <span class="article-title"><%= post.title %></span>
       </a>
+      <% if (post.author) { %>
+        <a href="/author/<%= post.author._id %>" style="text-decoration: none; display: inline-block;">
+          <span class="article-author-tag">by <%= post.author.username %></span>
+        </a>
+      <% } %>
+      <div class="article-list__date"><%= post.createdAt.toDateString() %></div>
     </li>
      <% }) %>
    
