@@ -1,27 +1,27 @@
 const express = require('express');
-const router  = express.Router();
-const Post = require('../models/Post');
+const router = express.Router();
+const Post = require('../models/post');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const jwtSecret = process.env.JWT_SECRET;
 const dashboardLayout = '../views/layouts/dashboard';
 
-const authMiddleware = (req,res,next)=>{
+const authMiddleware = (req, res, next) => {
   const token = req.cookies.token;
-  if(!token){
+  if (!token) {
     return res.redirect('/login');
   }
-  try{
-    const decoded = jwt.verify(token,jwtSecret);
+  try {
+    const decoded = jwt.verify(token, jwtSecret);
     req.userId = decoded.userId;
     next();
-  }catch(error){
-     res.redirect('/login');
+  } catch (error) {
+    res.redirect('/login');
   }
 }
 
-router.get('/dashboard',authMiddleware,async(req,res)=>{
+router.get('/dashboard', authMiddleware, async (req, res) => {
   try {
     const locals = { title: "Dashboard", description: "Simple Blog created with NodeJs, Express & MongoDb." };
     const data = await Post.find({ author: req.userId }).lean();
@@ -32,7 +32,7 @@ router.get('/dashboard',authMiddleware,async(req,res)=>{
   }
 });
 
-router.get('/add-post',authMiddleware,async(req,res)=>{
+router.get('/add-post', authMiddleware, async (req, res) => {
   try {
     const locals = { title: "Add Post", description: "..." };
     res.render('user/add-post', { locals, layout: dashboardLayout });
@@ -42,7 +42,7 @@ router.get('/add-post',authMiddleware,async(req,res)=>{
   }
 });
 
-router.post('/add-post',authMiddleware,async(req,res)=>{
+router.post('/add-post', authMiddleware, async (req, res) => {
   try {
     if (!req.body.title || !req.body.body || req.body.title.trim() === '' || req.body.body.trim() === '') {
       return res.status(400).send('Title and body content are required.');
@@ -86,7 +86,7 @@ router.get('/edit-post/:id', authMiddleware, async (req, res) => {
   try {
     const locals = { title: "Edit Post", description: "..." };
     const data = await Post.findOne({ _id: req.params.id, author: req.userId }).lean();
-    if(!data) return res.redirect('/dashboard');
+    if (!data) return res.redirect('/dashboard');
     res.render('user/edit-post', { locals, data, layout: dashboardLayout });
   } catch (error) {
     console.log(error);
@@ -131,9 +131,9 @@ router.get('/profile', authMiddleware, async (req, res) => {
 
 router.put('/profile', authMiddleware, async (req, res) => {
   try {
-    await User.findByIdAndUpdate(req.userId, { 
+    await User.findByIdAndUpdate(req.userId, {
       bio: req.body.bio,
-      email: req.body.email 
+      email: req.body.email
     });
     res.redirect('/profile');
   } catch (error) {
