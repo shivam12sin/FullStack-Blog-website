@@ -9,6 +9,14 @@ const dashboardLayout = '../views/layouts/dashboard';
 
 router.get('/login', async (req, res) => {
   try {
+    const token = req.cookies.token;
+    if (token) {
+      try {
+        jwt.verify(token, jwtSecret);
+        return res.redirect('/dashboard');
+      } catch(err) { }
+    }
+    
     const locals = { title: "Login", description: "Simple Blog created with NodeJs, Express & MongoDb." };
     res.render('login', { locals, layout: dashboardLayout });
   } catch (error) {

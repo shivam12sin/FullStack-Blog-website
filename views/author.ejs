@@ -1,0 +1,39 @@
+<div class="author auth-container" style="max-width: 800px; margin-top: 2rem;">
+  <h1 class="author__heading" style="margin-bottom: 0;"><%= author.username %></h1>
+  
+  <div style="display: flex; justify-content: center; gap: 2rem; margin: 1rem 0; color: #06b6d4; font-weight: 600;">
+    <span><%= posts.length %> Posts</span>
+    <span><%= author.followers ? author.followers.length : 0 %> Followers</span>
+    <span><%= author.following ? author.following.length : 0 %> Following</span>
+  </div>
+
+  <p class="author__body" style="margin-bottom: 2rem;">
+    <%= author.bio || "This author hasn't written a biography yet." %>
+  </p>
+
+  <% 
+    let isSubscribed = false;
+    if (typeof userLoggedIn !== 'undefined' && userLoggedIn && typeof userId !== 'undefined' && author.followers.some(id => id.toString() === userId.toString())) {
+      isSubscribed = true;
+    }
+  %>
+  <form action="/subscribe/<%= author._id %>" method="POST" style="display:<%= (typeof userId !== 'undefined' && userId === author._id.toString()) ? 'none' : 'block' %>;">
+    <button type="submit" class="btn" style="padding: 0.5rem 2rem; min-width: 150px; <%= isSubscribed ? 'background: rgba(255,255,255,0.1); color: var(--text-muted); border-color: rgba(255,255,255,0.2);' : '' %>">
+      <%= isSubscribed ? 'Subscribed' : 'Subscribe' %>
+    </button>
+  </form>
+</div>
+
+<section class="articles" style="margin-top: 4rem;">
+  <h2 class="articles__heading"><%= author.username %>'s Latest Posts</h2>
+  <ul class="article-ul">
+    <% posts.forEach(post => { %>
+    <li>
+      <a href="/post/<%= post._id %>">
+        <span><%= post.title %></span>
+        <span class="article-list__date"><%= post.createdAt.toDateString() %></span>
+      </a>
+    </li>
+    <% }) %>
+  </ul>
+</section>

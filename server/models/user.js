@@ -11,7 +11,19 @@ const userSchema = new Schema({
   password:{
     type:String,
     required:true,
-  }
+  },
+  bio: {
+    type: String,
+    default: "This author hasn't written a biography yet."
+  },
+  followers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  following: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 }, { timestamps: true });
 
 

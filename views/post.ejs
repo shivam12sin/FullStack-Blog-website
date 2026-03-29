@@ -1,6 +1,8 @@
 <h1><%= data.title %></h1>
 <% if (data.author) { %>
-  <p class="article-author-tag" style="margin-bottom: 2rem;">Written by <%= data.author.username %></p>
+  <a href="/author/<%= data.author._id %>" style="text-decoration: none;">
+    <p class="article-author-tag" style="margin-bottom: 2rem;">Written by <%= data.author.username %></p>
+  </a>
 <% } %>
 <article class="article">
   <%- content %> <!-- Render HTML safely -->

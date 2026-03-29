@@ -15,9 +15,9 @@
       <li>
         <a href="/contact" class="<%= isActiveRoute('/contact',currentRoute)%>">Contact</a>
       </li>
-      <% if (locals.userLoggedIn) { %>
+      <% if (typeof userLoggedIn !== 'undefined' && userLoggedIn) { %>
         <li>
-          <a href="/dashboard" class="<%= isActiveRoute('/dashboard',currentRoute)%>">Dashboard</a>
+          <a href="/dashboard" class="<%= isActiveRoute('/dashboard',currentRoute)%>">Write</a>
         </li>
         <li>
           <a href="/logout">Logout</a>

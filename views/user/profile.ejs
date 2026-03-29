@@ -1,0 +1,12 @@
+<div class="admin-title">
+  <h2>Profile Settings</h2>
+</div>
+
+<div class="auth-container" style="max-width: 100%; padding: 2rem;">
+  <form action="/profile?_method=PUT" method="POST">
+    <label for="bio"><b>Author Biography</b></label>
+    <textarea name="bio" placeholder="Tell your readers about yourself..."><%= user.bio %></textarea>
+
+    <input type="submit" value="Save Profile" class="btn" style="width: 200px;">
+  </form>
+</div>

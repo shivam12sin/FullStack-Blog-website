@@ -2,6 +2,7 @@ const express = require('express');
 // const { model } = require('mongoose');
 const router  = express.Router();
 const Post = require('../models/post');
+const User = require('../models/user');
 const nodemailer = require('nodemailer');
 const marked = require('marked');
 
@@ -63,6 +64,26 @@ router.get('/post/:id', async (req, res) => {
 
   } catch (error) {
     console.log(error);
+  }
+});
+
+router.get('/author/:id', async (req, res) => {
+  try {
+    const authorId = req.params.id;
+    const author = await User.findById(authorId).lean();
+    if (!author) return res.redirect('/');
+
+    const posts = await Post.find({ author: authorId }).sort({ createdAt: -1 }).lean();
+    const locals = { 
+      title: `${author.username}'s Profile`, 
+      description: "Author profile", 
+      currentRoute: `/author/${authorId}` 
+    };
+
+    res.render('author', { locals, author, posts });
+  } catch (error) {
+    console.log(error);
+    res.redirect('/');
   }
 });
 

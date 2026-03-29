@@ -7,6 +7,9 @@
         <a href="/" class="">Home</a>
       </li>
       <li>
+        <a href="/profile" class="<%= typeof currentRoute !== 'undefined' ? isActiveRoute('/profile', currentRoute) : '' %>">Profile</a>
+      </li>
+      <li>
         <a href="/about" class="">About</a>
       </li>
       <li>
