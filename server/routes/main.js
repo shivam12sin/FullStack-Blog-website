@@ -1,7 +1,7 @@
 const express = require('express');
 // const { model } = require('mongoose');
-const router  = express.Router();
-const Post = require('../models/Post');
+const router = express.Router();
+const Post = require('../models/post');
 const User = require('../models/user');
 const Comment = require('../models/Comment');
 const nodemailer = require('nodemailer');
@@ -9,51 +9,51 @@ const marked = require('marked');
 const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
 
-const authMiddleware = (req,res,next)=>{
+const authMiddleware = (req, res, next) => {
   const token = req.cookies.token;
-  if(!token){
+  if (!token) {
     return res.redirect('/login');
   }
-  try{
-    const decoded = jwt.verify(token,jwtSecret);
+  try {
+    const decoded = jwt.verify(token, jwtSecret);
     req.userId = decoded.userId;
     next();
-  }catch(error){
-     res.redirect('/login');
+  } catch (error) {
+    res.redirect('/login');
   }
 }
 
 
 
-router.get('',async(req ,res)=>{
+router.get('', async (req, res) => {
   try {
-     const locals = {
-    title:"Node js Blog",
-    description:"Simple Blog created with Nodejs,Express & MongoDb."
-  }
-  let perPage =10;
-  let page = req.query.page || 1;
+    const locals = {
+      title: "Node js Blog",
+      description: "Simple Blog created with Nodejs,Express & MongoDb."
+    }
+    let perPage = 10;
+    let page = req.query.page || 1;
 
-  const data = await Post.find().sort({ createdAt: -1 }).skip(perPage * page - perPage).limit(perPage).populate('author', 'username').lean().exec();
+    const data = await Post.find().sort({ createdAt: -1 }).skip(perPage * page - perPage).limit(perPage).populate('author', 'username').lean().exec();
 
-  const count = await Post.countDocuments({});
-  const nextPage = parseInt(page)+1;
-  const hasNextPage = nextPage <=Math.ceil(count/perPage);
+    const count = await Post.countDocuments({});
+    const nextPage = parseInt(page) + 1;
+    const hasNextPage = nextPage <= Math.ceil(count / perPage);
 
 
 
     res.set('Cache-Control', 'public, max-age=60'); // Keep in cache for 60 seconds
-    res.render('index',{
+    res.render('index', {
       locals,
       data,
-      current:page,
-      nextPage:hasNextPage ? nextPage:null,
-      currentRoute:'/'
-    }); 
+      current: page,
+      nextPage: hasNextPage ? nextPage : null,
+      currentRoute: '/'
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send('Internal Server Error');
-  }  
+  }
 });
 
 router.get('/post/:id', async (req, res) => {
@@ -75,7 +75,7 @@ router.get('/post/:id', async (req, res) => {
     const content = marked.parse(data.body);
 
     res.set('Cache-Control', 'public, max-age=300'); // Cache static content for 5 minutes
-    res.render('post', { 
+    res.render('post', {
       locals,
       content, // pass HTML content
       data,
@@ -130,11 +130,11 @@ router.get('/tag/:tag', async (req, res) => {
       current: page,
       nextPage: hasNextPage ? nextPage : null,
       currentRoute: `/tag/${rawTag}`
-    }); 
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send('Internal Server Error');
-  }  
+  }
 });
 
 router.get('/author/:id', async (req, res) => {
@@ -144,10 +144,10 @@ router.get('/author/:id', async (req, res) => {
     if (!author) return res.redirect('/');
 
     const posts = await Post.find({ author: authorId }).sort({ createdAt: -1 }).lean();
-    const locals = { 
-      title: `${author.username}'s Profile`, 
-      description: "Author profile", 
-      currentRoute: `/author/${authorId}` 
+    const locals = {
+      title: `${author.username}'s Profile`,
+      description: "Author profile",
+      currentRoute: `/author/${authorId}`
     };
 
     res.render('author', { locals, author, posts });
@@ -158,39 +158,39 @@ router.get('/author/:id', async (req, res) => {
 });
 
 
-router.post('/search',async(req,res)=>{
-   const locals = {
-      title: "Search",
-      description: "Simple Blog created with NodeJs, Express & MongoDb.",
-    }
-    try {
+router.post('/search', async (req, res) => {
+  const locals = {
+    title: "Search",
+    description: "Simple Blog created with NodeJs, Express & MongoDb.",
+  }
+  try {
 
-      let searchTerm = req.body.searchTerm;
-      const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9]/g, "");
+    let searchTerm = req.body.searchTerm;
+    const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9]/g, "");
 
 
-      const data = await Post.find({
-        $or:[
-          {title:{$regex:new RegExp(searchNoSpecialChar,'i')}},
-          {body:{$regex:new RegExp(searchNoSpecialChar,'i')}}
-        ]
-      }).populate('author', 'username').lean();
+    const data = await Post.find({
+      $or: [
+        { title: { $regex: new RegExp(searchNoSpecialChar, 'i') } },
+        { body: { $regex: new RegExp(searchNoSpecialChar, 'i') } }
+      ]
+    }).populate('author', 'username').lean();
 
-      res.render("search",{data,locals});
-      
-    } catch (error) {
-      console.log(error);
-      res.status(500).send('Internal Server Error');
-    }
+    res.render("search", { data, locals });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
+  }
 
 })
 
 
 
-router.get('/about',(req,res)=>{
-  
-  res.render('about',{
-    currentRoute:`/about`
+router.get('/about', (req, res) => {
+
+  res.render('about', {
+    currentRoute: `/about`
   });
 });
 
