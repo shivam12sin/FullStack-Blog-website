@@ -31,8 +31,15 @@
     <li>
       <a href="/post/<%= post._id %>" style="text-decoration: none; display: block;">
         <span class="article-title"><%= post.title %></span>
-        <span class="article-list__date"><%= post.createdAt.toDateString() %></span>
       </a>
+      <% if (post.tags && post.tags.length > 0) { %>
+        <div style="margin-top: 0.25rem; margin-bottom: 0.5rem;">
+          <% post.tags.forEach(tag => { %>
+            <a href="/tag/<%= tag %>" class="mode-badge" style="display: inline-block; margin-left: 0; margin-right: 0.5rem;"><%= tag %></a>
+          <% }) %>
+        </div>
+      <% } %>
+      <span class="article-list__date"><%= post.createdAt.toDateString() %></span>
     </li>
     <% }) %>
   </ul>

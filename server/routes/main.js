@@ -1,10 +1,27 @@
 const express = require('express');
 // const { model } = require('mongoose');
 const router  = express.Router();
-const Post = require('../models/post');
+const Post = require('../models/Post');
 const User = require('../models/user');
+const Comment = require('../models/Comment');
 const nodemailer = require('nodemailer');
 const marked = require('marked');
+const jwt = require('jsonwebtoken');
+const jwtSecret = process.env.JWT_SECRET;
+
+const authMiddleware = (req,res,next)=>{
+  const token = req.cookies.token;
+  if(!token){
+    return res.redirect('/login');
+  }
+  try{
+    const decoded = jwt.verify(token,jwtSecret);
+    req.userId = decoded.userId;
+    next();
+  }catch(error){
+     res.redirect('/login');
+  }
+}
 
 
 
@@ -35,7 +52,7 @@ router.get('',async(req ,res)=>{
     }); 
   } catch (error) {
     console.log(error);
-    
+    res.status(500).send('Internal Server Error');
   }  
 });
 
@@ -44,6 +61,9 @@ router.get('/post/:id', async (req, res) => {
     let slug = req.params.id;
 
     const data = await Post.findById(slug).populate('author', 'username').lean();
+    if (!data) return res.status(404).render('404', { locals: { title: "404 Not Found", description: "Post not found." }, currentRoute: `/post/${slug}` });
+
+    const comments = await Comment.find({ post: slug }).populate('author', 'username').sort({ createdAt: -1 }).lean();
 
     const locals = {
       title: data.title,
@@ -59,12 +79,62 @@ router.get('/post/:id', async (req, res) => {
       locals,
       content, // pass HTML content
       data,
+      comments,
       currentRoute: `/post/${slug}`
     });
 
   } catch (error) {
     console.log(error);
+    res.status(500).send('Internal Server Error');
   }
+});
+
+router.post('/post/:id/comment', authMiddleware, async (req, res) => {
+  try {
+    const newComment = new Comment({
+      content: req.body.content,
+      author: req.userId,
+      post: req.params.id
+    });
+    await Comment.create(newComment);
+    res.redirect(`/post/${req.params.id}`);
+  } catch (error) {
+    console.log(error);
+    res.redirect(`/post/${req.params.id}`);
+  }
+});
+
+router.get('/tag/:tag', async (req, res) => {
+  try {
+    const rawTag = req.params.tag;
+    const tag = rawTag.toLowerCase();
+
+    const locals = {
+      title: `Posts tagged: ${tag}`,
+      description: `Articles and posts about ${tag}`
+    };
+
+    let perPage = 10;
+    let page = req.query.page || 1;
+
+    const query = { tags: tag };
+    const data = await Post.find(query).sort({ createdAt: -1 }).skip(perPage * page - perPage).limit(perPage).populate('author', 'username').lean().exec();
+
+    const count = await Post.countDocuments(query);
+    const nextPage = parseInt(page) + 1;
+    const hasNextPage = nextPage <= Math.ceil(count / perPage);
+
+    res.render('index', {
+      locals,
+      data,
+      current: page,
+      nextPage: hasNextPage ? nextPage : null,
+      currentRoute: `/tag/${rawTag}`
+    }); 
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
+  }  
 });
 
 router.get('/author/:id', async (req, res) => {
@@ -110,7 +180,7 @@ router.post('/search',async(req,res)=>{
       
     } catch (error) {
       console.log(error);
-      
+      res.status(500).send('Internal Server Error');
     }
 
 })
@@ -125,11 +195,11 @@ router.get('/about',(req,res)=>{
 });
 
 
-router.get('/contact', (req, res) => {
-  res.render('contact');
+router.get('/support', (req, res) => {
+  res.render('support');
 });
 
-router.post('/contact', async (req, res) => {
+router.post('/support', async (req, res) => {
   const { name, email, message } = req.body;
 
   try {

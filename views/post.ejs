@@ -1,9 +1,52 @@
 <h1><%= data.title %></h1>
 <% if (data.author) { %>
   <a href="/author/<%= data.author._id %>" style="text-decoration: none;">
-    <p class="article-author-tag" style="margin-bottom: 2rem;">Written by <%= data.author.username %></p>
+    <p class="article-author-tag" style="margin-bottom: 1rem;">Written by <%= data.author.username %></p>
   </a>
+<% } %>
+<% if (data.tags && data.tags.length > 0) { %>
+  <div style="margin-bottom: 2rem;">
+    <% data.tags.forEach(tag => { %>
+      <a href="/tag/<%= tag %>" class="mode-badge" style="display: inline-block; margin-right: 0.5rem;"><%= tag %></a>
+    <% }) %>
+  </div>
 <% } %>
 <article class="article">
   <%- content %> <!-- Render HTML safely -->
 </article>
+
+<hr style="margin-top: 4rem; margin-bottom: 2rem; border: 0; border-top: 1px solid var(--border);">
+
+<section class="comments-section" style="max-width: 700px; margin: 0 auto; text-align: left;">
+  <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem;">Discussion (<%= comments ? comments.length : 0 %>)</h3>
+
+  <% if (typeof userId !== 'undefined' && userId) { %>
+    <form action="/post/<%= data._id %>/comment" method="POST" style="margin-bottom: 3rem;">
+      <textarea name="content" rows="3" placeholder="What are your thoughts?" required style="width: 100%; padding: 1rem; border: 1px solid var(--border); border-radius: 4px; border-bottom-right-radius: 0; margin-bottom: 0.5rem; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
+      <div style="text-align: right;">
+        <button type="submit" class="btn" style="padding: 0.5rem 1.5rem; display: inline-block;">Post Comment</button>
+      </div>
+    </form>
+  <% } else { %>
+    <div style="padding: 1.5rem; background: var(--bg-hover); border-radius: 4px; text-align: center; margin-bottom: 3rem; color: var(--text-muted);">
+      <p style="margin-bottom: 0.5rem;">Join the conversation.</p>
+      <a href="/login" style="color: var(--text-main); font-weight: 600;">Log in or create an account &rarr;</a>
+    </div>
+  <% } %>
+
+  <div class="comments-list">
+    <% if (comments && comments.length > 0) { %>
+      <% comments.forEach(comment => { %>
+        <div class="comment" style="padding-bottom: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border);">
+          <div style="display: flex; align-items: baseline; margin-bottom: 0.5rem;">
+            <a href="/author/<%= comment.author._id %>" style="font-weight: 600; color: var(--text-main); text-decoration: none; margin-right: 0.75rem;"><%= comment.author.username %></a>
+            <span style="font-size: 0.8em; color: var(--text-muted);"><%= comment.createdAt.toLocaleDateString() %></span>
+          </div>
+          <p style="margin: 0; line-height: 1.5; color: var(--text-main);"><%= comment.content %></p>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p style="color: var(--text-muted); font-style: italic;">No comments yet. Be the first to share your thoughts!</p>
+    <% } %>
+  </div>
+</section>

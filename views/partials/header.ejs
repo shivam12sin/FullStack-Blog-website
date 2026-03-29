@@ -9,12 +9,6 @@
       <li>
         <a href="/" class="<%= isActiveRoute('/',currentRoute)%>">Home</a>
       </li>
-      <li>
-        <a href="/about" class="<%= isActiveRoute('/about',currentRoute)%>">About</a>
-      </li>
-      <li>
-        <a href="/contact" class="<%= isActiveRoute('/contact',currentRoute)%>">Contact</a>
-      </li>
       <% if (typeof userLoggedIn !== 'undefined' && userLoggedIn) { %>
         <li>
           <a href="/dashboard" class="<%= isActiveRoute('/dashboard',currentRoute)%>">Write</a>

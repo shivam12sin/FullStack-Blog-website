@@ -1,3 +1,9 @@
-<footer class="footer">
- &copy; <%= new Date().getFullYear(); %> Shiv • Built with NodeJs & MongoDB
+<footer class="footer" style="padding: 2rem 0; border-top: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 4rem;">
+  <div class="footer-links" style="display: flex; gap: 2rem;">
+    <a href="/about" style="color: var(--text-muted); text-decoration: none; font-size: 0.9em; font-weight: 500;">About</a>
+    <a href="/support" style="color: var(--text-muted); text-decoration: none; font-size: 0.9em; font-weight: 500;">Support</a>
+  </div>
+  <div style="font-size: 0.85em; color: var(--text-muted);">
+    &copy; <%= new Date().getFullYear(); %> Writer's Network • Built with NodeJs & MongoDB
+  </div>
 </footer>

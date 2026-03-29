@@ -1,8 +1,9 @@
 const express = require('express');
 const router  = express.Router();
-const Post = require('../models/post');
+const Post = require('../models/Post');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 const jwtSecret = process.env.JWT_SECRET;
 const dashboardLayout = '../views/layouts/dashboard';
 
@@ -27,6 +28,7 @@ router.get('/dashboard',authMiddleware,async(req,res)=>{
     res.render('user/dashboard', { locals, data, layout: dashboardLayout });
   } catch (error) {
     console.log(error);
+    res.status(500).send('Internal server error');
   }
 });
 
@@ -36,13 +38,44 @@ router.get('/add-post',authMiddleware,async(req,res)=>{
     res.render('user/add-post', { locals, layout: dashboardLayout });
   } catch (error) {
     console.log(error);
+    res.status(500).send('Internal server error');
   }
 });
 
 router.post('/add-post',authMiddleware,async(req,res)=>{
   try {
-    const newPost = new Post({ title: req.body.title, body: req.body.body, author: req.userId });
+    if (!req.body.title || !req.body.body || req.body.title.trim() === '' || req.body.body.trim() === '') {
+      return res.status(400).send('Title and body content are required.');
+    }
+    const rawTags = req.body.tags || '';
+    const tagsArray = rawTags.split(',').map(tag => tag.trim().toLowerCase()).filter(tag => tag.length > 0);
+
+    const newPost = new Post({ title: req.body.title, body: req.body.body, author: req.userId, tags: tagsArray });
     await Post.create(newPost);
+
+    // NOTIFICATION PIPELINE
+    const author = await User.findById(req.userId).populate('followers', 'email username');
+    if (author && author.followers && author.followers.length > 0) {
+      const bccEmails = author.followers.map(f => f.email).filter(e => e && e.trim() !== '');
+      if (bccEmails.length > 0) {
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+          },
+        });
+        const mailOptions = {
+          from: `"Writer's Network" <${process.env.EMAIL_USER}>`,
+          bcc: bccEmails,
+          subject: `${author.username} published a new post: ${newPost.title}`,
+          text: `Hi there!\n\nThe author ${author.username} just published a highly anticipated new article titled "${newPost.title}".\n\nRead their latest thoughts here:\nhttp://localhost:5000/post/${newPost._id}\n\nHappy reading,\nWriter's Network Team`,
+        };
+        // Run asynchronously so it doesn't block the routing sequence
+        transporter.sendMail(mailOptions).catch(err => console.error('Email dispatch failed:', err));
+      }
+    }
+
     res.redirect('/dashboard');
   } catch (error) {
     console.log(error);
@@ -57,17 +90,22 @@ router.get('/edit-post/:id', authMiddleware, async (req, res) => {
     res.render('user/edit-post', { locals, data, layout: dashboardLayout });
   } catch (error) {
     console.log(error);
+    res.status(500).send('Internal server error');
   }
 });
 
 router.put('/edit-post/:id', authMiddleware, async (req, res) => {
   try {
+    const rawTags = req.body.tags || '';
+    const tagsArray = rawTags.split(',').map(tag => tag.trim().toLowerCase()).filter(tag => tag.length > 0);
+
     await Post.findOneAndUpdate({ _id: req.params.id, author: req.userId }, {
-      title: req.body.title, body: req.body.body, updatedAt: Date.now()
+      title: req.body.title, body: req.body.body, tags: tagsArray, updatedAt: Date.now()
     });
     res.redirect(`/edit-post/${req.params.id}`);
   } catch (error) {
     console.log(error);
+    res.status(500).send('Internal server error');
   }
 });
 
@@ -87,15 +125,20 @@ router.get('/profile', authMiddleware, async (req, res) => {
     res.render('user/profile', { locals, user, layout: dashboardLayout });
   } catch (error) {
     console.log(error);
+    res.status(500).send('Internal server error');
   }
 });
 
 router.put('/profile', authMiddleware, async (req, res) => {
   try {
-    await User.findByIdAndUpdate(req.userId, { bio: req.body.bio });
+    await User.findByIdAndUpdate(req.userId, { 
+      bio: req.body.bio,
+      email: req.body.email 
+    });
     res.redirect('/profile');
   } catch (error) {
     console.log(error);
+    res.status(500).send('Internal server error');
   }
 });
 
@@ -122,6 +165,7 @@ router.post('/subscribe/:authorId', authMiddleware, async (req, res) => {
     res.redirect(`/author/${authorId}`);
   } catch (error) {
     console.log(error);
+    res.status(500).send('Internal server error');
   }
 });
 

@@ -12,6 +12,11 @@ const userSchema = new Schema({
     type:String,
     required:true,
   },
+  email: {
+    type: String,
+    trim: true,
+    lowercase: true
+  },
   bio: {
     type: String,
     default: "This author hasn't written a biography yet."

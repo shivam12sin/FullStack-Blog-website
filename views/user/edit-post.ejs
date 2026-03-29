@@ -13,9 +13,22 @@
   <label for="title"><b>Title</b></label>
   <input type="text" placeholder="Post Title" name="title" value="<%= data.title %>">
 
-  <label for="body"><b>Content</b></label>
-  <textarea name="body" cols="50" rows="10"><%= data.body %></textarea>
+  <label for="tags"><b>Tags</b> <span style="color: var(--text-muted); font-size: 0.8em; font-weight: normal;">(Separate with commas)</span></label>
+  <input type="text" placeholder="e.g. Technology, Lifestyle, AI" name="tags" value="<%= data.tags ? data.tags.join(', ') : '' %>">
 
-  <input type="submit" value="Update" class="btn">
+  <label for="body"><b>Content</b></label>
+  <textarea name="body" id="body-editor" cols="50" rows="10"><%= data.body %></textarea>
+
+  <input type="submit" value="Update" class="btn" style="margin-top: 1rem;">
 
 </form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    new EasyMDE({ 
+      element: document.getElementById('body-editor'),
+      spellChecker: false,
+      status: false
+    });
+  });
+</script>

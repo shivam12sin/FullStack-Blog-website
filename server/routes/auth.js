@@ -21,6 +21,7 @@ router.get('/login', async (req, res) => {
     res.render('login', { locals, layout: dashboardLayout });
   } catch (error) {
     console.log(error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
@@ -40,6 +41,7 @@ router.post('/login', async (req, res) => {
     res.redirect('/dashboard');
   } catch (error) {
     console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
@@ -59,6 +61,7 @@ router.post('/register', async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 

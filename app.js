@@ -52,6 +52,10 @@ app.use('/',require('./server/routes/main'));
 app.use('/',require('./server/routes/auth'));
 app.use('/',require('./server/routes/dashboard'));
 
+app.use((req, res) => {
+  res.status(404).render('404', { locals: { title: "404 Not Found", description: "Page not found." }, currentRoute: req.path });
+});
+
 app.listen(PORT,()=>{
   console.log(`App listening on port ${PORT}`);
 })

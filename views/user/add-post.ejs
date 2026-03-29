@@ -8,10 +8,21 @@
   <label for="title">Title</label>
   <input type="text" placeholder="Post Title" name="title">
 
+  <label for="tags">Tags <span style="color: var(--text-muted); font-size: 0.8em; font-weight: normal;">(Separate with commas)</span></label>
+  <input type="text" placeholder="e.g. Technology, Lifestyle, AI" name="tags">
+
   <label for="body">Content</label>
- <textarea name="body" cols="50" rows="10"></textarea>
- <input type="submit" value="Add" class="btn">
-
-
+  <textarea name="body" id="body-editor" cols="50" rows="10"></textarea>
+  <input type="submit" value="Add" class="btn" style="margin-top: 1rem;">
 
 </form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    new EasyMDE({ 
+      element: document.getElementById('body-editor'),
+      spellChecker: false,
+      status: false
+    });
+  });
+</script>
