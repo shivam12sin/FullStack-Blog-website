@@ -1,99 +1,91 @@
 
-# 📝 Full Stack Blog Website
+# Full Stack Blog Website
 
-A simple and functional full-stack blog website built using **Node.js**, **Express**, **MongoDB**, and **EJS** templating. It supports full CRUD operations, user authentication with JWT, and an admin dashboard for managing blog posts.
+Modern publishing platform built with Node.js, Express, MongoDB, and EJS. The current release includes the “Living Manuscript” design system featuring parchment-inspired surfaces, serif typography, and asymmetrical layouts tailored for long-form reading.
 
-## 🌐 Live Demo
+## Live Demo
 
-👉 [Visit the live website](https://fullstack-blog-website-4.onrender.com)
+- https://fullstack-blog-website-4.onrender.com
 
-## 🚀 Features
+## Key Features
 
-- Admin login with secure JWT-based authentication
-- Create, Read, Update, Delete (CRUD) blog posts
-- EJS templating for dynamic rendering
-- Password hashing using bcrypt
-- MongoDB Atlas as the database
-- Responsive design
+- JWT-based authentication with protected dashboard routes
+- Full CRUD workflow for posts, authors, and comments
+- Markdown-to-HTML rendering for article bodies
+- Living Manuscript UI: layered parchment textures, dual-serif typography, glassmorphic search, sepia-treated media
+- MongoDB connection with automatic in-memory fallback when `MONGODB_URI` is not defined (useful for local preview)
+- ESLint flat-config setup (`npm run lint`) to enforce consistent style
 
-## 📸 Screenshots
+## Technology Stack
 
-### 📍 Homepage
-![Homepage Screenshot](https://github.com/user-attachments/assets/0e58920d-7735-47a5-a980-a6aa07c48f33)
+- Node.js 20+
+- Express 5
+- MongoDB / Mongoose 8
+- EJS templates with express-ejs-layouts
+- JWT + bcrypt for authentication and password hashing
+- mongodb-memory-server for development fallback
+- Vanilla CSS for the design system enhancements
 
-### 📍 Admin Dashboard
-![Admin Dashboard Screenshot](https://github.com/user-attachments/assets/c09fa520-6d0b-4c35-a8c7-8f3e23fef451)
-
-### 📍 Add/Edit Post Views
-![Add/Edit Post Screenshot](https://github.com/user-attachments/assets/f8844f9e-d9d5-4491-8d77-8fa37f7674f4)
-
-## 🛠️ Tech Stack
-
-- Node.js
-- Express.js
-- MongoDB & Mongoose
-- EJS
-- JWT for authentication
-- bcrypt for password hashing
-- Bootstrap (or your preferred styling framework)
-
-## 📂 Project Structure
+## Project Structure
 
 ```
-├── models/
-│   ├── post.js
-│   └── user.js
-├── routes/
-│   └── admin.js
+├── public/
+│   ├── css/
+│   ├── img/
+│   └── js/
+├── server/
+│   ├── config/
+│   ├── helpers/
+│   ├── models/
+│   └── routes/
 ├── views/
 │   ├── layouts/
-│   ├── admin/
-│   └── partials/
-├── public/
-├── .env
+│   ├── partials/
+│   └── user/
 ├── app.js
+├── eslint.config.cjs
+├── package.json
 └── README.md
 ```
 
-## 🔒 Environment Variables
+## Environment Variables
 
-Create a `.env` file in the root directory and add:
+Create a `.env` file in the project root. At minimum set:
 
-```env
+```
 JWT_SECRET=your_jwt_secret
-MONGODB_URI=your_mongodb_connection_string
-PORT=10000
+MONGODB_URI=mongodb_connection_string (optional for local preview)
+PORT=5050
+EMAIL_USER=sender@example.com (required for support form)
+EMAIL_PASS=app_specific_password
 ```
 
-## 🚀 Getting Started Locally
+When `MONGODB_URI` is omitted, the server starts an ephemeral MongoDB instance using `mongodb-memory-server`. Use a real database for production deployments.
 
-1. **Clone the repository:**
+## Local Development
 
-   ```bash
-   git clone https://github.com/shivam12sin/FullStack-Blog-website.git
-   cd FullStack-Blog-website
-   ```
+```bash
+git clone https://github.com/shivam12sin/FullStack-Blog-website.git
+cd FullStack-Blog-website
+npm install
+cp .env.example .env   # create and edit if an example file exists
+npm start               # runs on http://localhost:5050
+```
 
-2. **Install dependencies:**
+### Available Scripts
 
-   ```bash
-   npm install
-   ```
+| Command        | Description                                  |
+| -------------- | -------------------------------------------- |
+| `npm start`    | Runs the server with the configured database |
+| `npm run dev`  | Starts the server with nodemon               |
+| `npm run lint` | Lints the project using ESLint flat config   |
 
-3. **Set up your `.env` file** as described above.
+## Deployment Notes
 
-4. **Run the application:**
+- Set the `PORT`, `MONGODB_URI`, `JWT_SECRET`, and email credentials in the hosting environment.
+- Disable the in-memory Mongo fallback in production by always providing `MONGODB_URI`.
+- The UI relies on hosted texture assets; self-host them if your deployment restricts external requests.
 
-   ```bash
-   node app.js
-   ```
+## Maintainer
 
-5. **Visit in browser:**  
-   `http://localhost:10000`
-
----
-
-## 👨‍💻 Author
-
-**Shivam Singh**  
-GitHub: [@shivam12sin](https://github.com/shivam12sin)
+Shivam Singh — [https://github.com/shivam12sin](https://github.com/shivam12sin)
