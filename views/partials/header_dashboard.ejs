@@ -1,0 +1,20 @@
+<header class="header">
+  <a href="/dashboard" class="header__logo">Writer Studio <span class="mode-badge">Write</span></a>
+
+  <nav class="header__nav">
+    <ul>
+      <li>
+        <a href="/" class="">Home</a>
+      </li>
+      <li>
+        <a href="/profile" class="<%= typeof currentRoute !== 'undefined' ? isActiveRoute('/profile', currentRoute) : '' %>">Profile</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="header__button">
+    <a href="/logout">logout</a>
+  </div>
+
+
+</header>

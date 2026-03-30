@@ -1,0 +1,50 @@
+<div class="auth-container auth-stack">
+  <div id="loginSection" class="auth-panel">
+    <div class="section-heading">
+      <span class="label-md">Returning</span>
+      <h3>Sign in to Writer's Network</h3>
+    </div>
+    <form action="/login" method="post">
+      <label for="username"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="username" required>
+
+      <label for="password"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" required>
+
+      <button type="submit" class="btn">Login</button>
+    </form>
+
+    <div class="auth-switch">
+      <p>Don't have an account?</p>
+      <button type="button" class="btn btn--ghost" onclick="toggleAuth('register')">Create an Account</button>
+    </div>
+  </div>
+
+  <div id="registerSection" class="auth-panel is-hidden">
+    <div class="section-heading">
+      <span class="label-md">New Scribe</span>
+      <h3>Join Writer's Network</h3>
+    </div>
+    <form action="/register" method="post">
+      <label for="username"><b>Choose a Username</b></label>
+      <input type="text" placeholder="Enter Username" name="username" required>
+
+      <label for="password"><b>Choose a Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" required>
+
+      <button type="submit" class="btn">Register</button>
+    </form>
+
+    <div class="auth-switch">
+      <p>Already have an account?</p>
+      <button type="button" class="btn btn--ghost" onclick="toggleAuth('login')">Sign In</button>
+    </div>
+  </div>
+
+  <script>
+    function toggleAuth(mode) {
+      document.getElementById('loginSection').classList.toggle('is-hidden', mode !== 'login');
+      document.getElementById('registerSection').classList.toggle('is-hidden', mode !== 'register');
+    }
+  </script>
+</div>

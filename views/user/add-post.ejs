@@ -1,0 +1,28 @@
+<a href="/dashboard" class="label-md">&larr; Back to Desk</a>
+<div class="admin-title">
+  <h2>Add New Post</h2>
+</div>
+
+
+<form action="/add-post" method="post">
+  <label for="title">Title</label>
+  <input type="text" placeholder="Post Title" name="title">
+
+  <label for="tags">Tags <span class="field-hint">(Separate with commas)</span></label>
+  <input type="text" placeholder="e.g. Technology, Lifestyle, AI" name="tags">
+
+  <label for="body">Content</label>
+  <textarea name="body" id="body-editor" cols="50" rows="10"></textarea>
+  <button type="submit" class="btn">Add</button>
+
+</form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    new EasyMDE({ 
+      element: document.getElementById('body-editor'),
+      spellChecker: false,
+      status: false
+    });
+  });
+</script>

@@ -1,0 +1,15 @@
+<div class="admin-title">
+  <h2>Profile Settings</h2>
+</div>
+
+<div class="auth-container profile-card">
+  <form action="/profile?_method=PUT" method="POST" class="profile-form">
+    <label for="email"><b>Email Address</b> <span class="field-hint">(Required for network notifications)</span></label>
+    <input type="email" name="email" placeholder="you@domain.com" value="<%= user.email || '' %>">
+
+    <label for="bio"><b>Author Biography</b></label>
+    <textarea name="bio" placeholder="Tell your readers about yourself..."><%= user.bio %></textarea>
+
+    <button type="submit" class="btn">Save Profile</button>
+  </form>
+</div>

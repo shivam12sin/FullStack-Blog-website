@@ -1,0 +1,52 @@
+<section class="author author-profile">
+  <div class="section-heading">
+    <span class="label-md">Author</span>
+    <h1 class="author__heading"><%= author.username %></h1>
+  </div>
+
+  <div class="author__stats">
+    <span><%= posts.length %> Posts</span>
+    <span><%= author.followers ? author.followers.length : 0 %> Followers</span>
+    <span><%= author.following ? author.following.length : 0 %> Following</span>
+  </div>
+
+  <p class="author__body"><%= author.bio || "This author hasn't written a biography yet." %></p>
+
+  <% 
+    let isSubscribed = false;
+    if (typeof userLoggedIn !== 'undefined' && userLoggedIn && typeof userId !== 'undefined' && author.followers.some(id => id.toString() === userId.toString())) {
+      isSubscribed = true;
+    }
+  %>
+  <% if (!(typeof userId !== 'undefined' && userId === author._id.toString())) { %>
+    <form action="/subscribe/<%= author._id %>" method="POST" class="subscribe-form">
+      <button type="submit" class="btn <%= isSubscribed ? 'btn--ghost' : '' %>">
+        <%= isSubscribed ? 'Subscribed' : 'Subscribe' %>
+      </button>
+    </form>
+  <% } %>
+</section>
+
+<section class="articles ledger">
+  <div class="articles__heading">
+    <span class="label-md">Latest from <%= author.username %></span>
+    <h2>Recent Entries</h2>
+  </div>
+  <ul class="article-ul">
+    <% posts.forEach(post => { %>
+    <li class="article-card">
+      <a href="/post/<%= post._id %>" class="article-title"><%= post.title %></a>
+      <% if (post.tags && post.tags.length > 0) { %>
+        <div class="article-card__tags">
+          <% post.tags.forEach(tag => { %>
+            <a href="/tag/<%= tag %>" class="tag-chip"><%= tag %></a>
+          <% }) %>
+        </div>
+      <% } %>
+      <div class="article-card__meta">
+        <span class="label-md">Recorded <%= post.createdAt.toDateString() %></span>
+      </div>
+    </li>
+    <% }) %>
+  </ul>
+</section>

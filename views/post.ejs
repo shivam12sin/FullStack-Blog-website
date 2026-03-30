@@ -1,0 +1,55 @@
+<section class="article-header">
+  <p class="label-md">Filed Dossier</p>
+  <h1 class="display-lg article__title"><%= data.title %></h1>
+  <% if (data.author) { %>
+    <a href="/author/<%= data.author._id %>" class="article-author-tag">Written by <%= data.author.username %></a>
+  <% } %>
+  <% if (data.tags && data.tags.length > 0) { %>
+    <div class="article-taglist">
+      <% data.tags.forEach(tag => { %>
+        <a href="/tag/<%= tag %>" class="tag-chip"><%= tag %></a>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+
+<article class="article article-body">
+  <%- content %>
+</article>
+
+<section class="comments-section">
+  <div class="section-heading">
+    <span class="label-md">Marginalia</span>
+    <h3>Discussion (<%= comments ? comments.length : 0 %>)</h3>
+  </div>
+
+  <% if (typeof userId !== 'undefined' && userId) { %>
+    <form action="/post/<%= data._id %>/comment" method="POST" class="comment-form">
+      <textarea name="content" rows="3" placeholder="What are your thoughts?" required></textarea>
+      <div class="comment-form__actions">
+        <button type="submit" class="btn">Post Comment</button>
+      </div>
+    </form>
+  <% } else { %>
+    <div class="comment-callout">
+      <p>Join the conversation.</p>
+      <a href="/login">Log in or create an account →</a>
+    </div>
+  <% } %>
+
+  <div class="comments-list">
+    <% if (comments && comments.length > 0) { %>
+      <% comments.forEach(comment => { %>
+        <div class="comment">
+          <div class="comment__meta">
+            <a href="/author/<%= comment.author._id %>"><%= comment.author.username %></a>
+            <span><%= comment.createdAt.toLocaleDateString() %></span>
+          </div>
+          <p><%= comment.content %></p>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p class="comment-empty">No comments yet. Be the first to share your thoughts!</p>
+    <% } %>
+  </div>
+</section>

@@ -1,0 +1,38 @@
+<div class="author hero">
+  <p class="label-md hero__label">Filed Dispatch</p>
+  <h1 class="author__heading display-lg">Writer's Network</h1>
+  <p class="author__body body-lg">Discover ideas, stories, and expertise from writers everywhere. Each entry is set like a fresh sheet in a growing manuscript.</p>
+  <p class="marginalia">Edition 03 · Updated <%= new Date().toLocaleDateString() %></p>
+</div>
+
+<section class="articles ledger">
+  <div class="articles__heading">
+    <span class="label-md">Ledger</span>
+    <h2>Latest Posts</h2>
+  </div>
+  <ul class="article-ul">
+    <% data.forEach(post => { %>
+    <li class="article-card">
+      <div class="article-card__header">
+        <a href="/post/<%= post._id %>" class="article-title"><%= post.title %></a>
+        <% if (post.author) { %>
+          <a href="/author/<%= post.author._id %>" class="article-author-tag">by <%= post.author.username %></a>
+        <% } %>
+      </div>
+      <% if (post.tags && post.tags.length > 0) { %>
+        <div class="article-card__tags">
+          <% post.tags.forEach(tag => { %>
+            <a href="/tag/<%= tag %>" class="tag-chip"><%= tag %></a>
+          <% }) %>
+        </div>
+      <% } %>
+      <div class="article-card__meta">
+        <span class="label-md">Recorded <%= post.createdAt.toDateString() %></span>
+      </div>
+    </li>
+    <% }) %>
+  </ul>
+  <% if (nextPage!==null) { %>
+    <a href="/?page=<%= nextPage%>" class="pagination">View Older Entries</a>
+  <% } %>
+</section>
