@@ -36,6 +36,25 @@ router.get('', async (req, res) => {
 
     const data = await Post.find().sort({ createdAt: -1 }).skip(perPage * page - perPage).limit(perPage).populate('author', 'username').lean().exec();
 
+    // Enrich each post with reading time and excerpt
+    data.forEach(post => {
+      // Reading time: ~200 words per minute
+      const wordCount = post.body ? post.body.split(/\s+/).length : 0;
+      post.readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
+      // Excerpt: strip markdown/HTML, truncate to 160 chars
+      const plainText = post.body
+        ? post.body
+            .replace(/[#*_~`>\[\]()!|\\-]/g, '') // strip markdown chars
+            .replace(/<[^>]*>/g, '')               // strip HTML tags
+            .replace(/\n+/g, ' ')                  // collapse newlines
+            .trim()
+        : '';
+      post.excerpt = plainText.length > 160
+        ? plainText.substring(0, 160).replace(/\s+\S*$/, '') + '...'
+        : plainText;
+    });
+
     const count = await Post.countDocuments({});
     const nextPage = parseInt(page) + 1;
     const hasNextPage = nextPage <= Math.ceil(count / perPage);
@@ -56,6 +75,7 @@ router.get('', async (req, res) => {
   }
 });
 
+
 router.get('/post/:id', async (req, res) => {
   try {
     let slug = req.params.id;
@@ -74,12 +94,17 @@ router.get('/post/:id', async (req, res) => {
     // Parse Markdown into HTML
     const content = marked.parse(data.body);
 
+    // Reading time: ~200 words per minute
+    const wordCount = data.body ? data.body.split(/\s+/).length : 0;
+    const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
     res.set('Cache-Control', 'public, max-age=300'); // Cache static content for 5 minutes
     res.render('post', {
       locals,
       content, // pass HTML content
       data,
       comments,
+      readingTime,
       currentRoute: `/post/${slug}`
     });
 

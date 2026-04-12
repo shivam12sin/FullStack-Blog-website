@@ -1,9 +1,12 @@
 <section class="article-header">
   <p class="label-md">Filed Dossier</p>
   <h1 class="display-lg article__title"><%= data.title %></h1>
-  <% if (data.author) { %>
-    <a href="/author/<%= data.author._id %>" class="article-author-tag">Written by <%= data.author.username %></a>
-  <% } %>
+  <div class="article-header__meta">
+    <% if (data.author) { %>
+      <a href="/author/<%= data.author._id %>" class="article-author-tag">Written by <%= data.author.username %></a>
+    <% } %>
+    <span class="label-md"><%= data.createdAt.toDateString() %> · <%= readingTime %> min read</span>
+  </div>
   <% if (data.tags && data.tags.length > 0) { %>
     <div class="article-taglist">
       <% data.tags.forEach(tag => { %>

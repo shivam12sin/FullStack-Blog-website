@@ -19,6 +19,9 @@
           <a href="/author/<%= post.author._id %>" class="article-author-tag">by <%= post.author.username %></a>
         <% } %>
       </div>
+      <% if (post.excerpt) { %>
+        <p class="article-excerpt"><%= post.excerpt %></p>
+      <% } %>
       <% if (post.tags && post.tags.length > 0) { %>
         <div class="article-card__tags">
           <% post.tags.forEach(tag => { %>
@@ -27,7 +30,7 @@
         </div>
       <% } %>
       <div class="article-card__meta">
-        <span class="label-md">Recorded <%= post.createdAt.toDateString() %></span>
+        <span class="label-md">Recorded <%= post.createdAt.toDateString() %> · <%= post.readingTime %> min read</span>
       </div>
     </li>
     <% }) %>
