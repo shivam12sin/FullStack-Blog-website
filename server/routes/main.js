@@ -145,6 +145,22 @@ router.get('/tag/:tag', async (req, res) => {
     const query = { tags: tag };
     const data = await Post.find(query).sort({ createdAt: -1 }).skip(perPage * page - perPage).limit(perPage).populate('author', 'username').lean().exec();
 
+    // Enrich posts with reading time and excerpt
+    data.forEach(post => {
+      const wordCount = post.body ? post.body.split(/\s+/).length : 0;
+      post.readingTime = Math.max(1, Math.ceil(wordCount / 200));
+      const plainText = post.body
+        ? post.body
+            .replace(/[#*_~`>\[\]()!|\\-]/g, '')
+            .replace(/<[^>]*>/g, '')
+            .replace(/\n+/g, ' ')
+            .trim()
+        : '';
+      post.excerpt = plainText.length > 160
+        ? plainText.substring(0, 160).replace(/\s+\S*$/, '') + '...'
+        : plainText;
+    });
+
     const count = await Post.countDocuments(query);
     const nextPage = parseInt(page) + 1;
     const hasNextPage = nextPage <= Math.ceil(count / perPage);
@@ -169,6 +185,22 @@ router.get('/author/:id', async (req, res) => {
     if (!author) return res.redirect('/');
 
     const posts = await Post.find({ author: authorId }).sort({ createdAt: -1 }).lean();
+
+    // Enrich posts with reading time and excerpt
+    posts.forEach(post => {
+      const wordCount = post.body ? post.body.split(/\s+/).length : 0;
+      post.readingTime = Math.max(1, Math.ceil(wordCount / 200));
+      const plainText = post.body
+        ? post.body
+            .replace(/[#*_~`>\[\]()!|\\-]/g, '')
+            .replace(/<[^>]*>/g, '')
+            .replace(/\n+/g, ' ')
+            .trim()
+        : '';
+      post.excerpt = plainText.length > 160
+        ? plainText.substring(0, 160).replace(/\s+\S*$/, '') + '...'
+        : plainText;
+    });
     const locals = {
       title: `${author.username}'s Profile`,
       description: "Author profile",
