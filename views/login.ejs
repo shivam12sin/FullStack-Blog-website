@@ -5,6 +5,9 @@
       <h3>Sign in to Writer's Network</h3>
     </div>
     <form action="/login" method="post">
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="auth-error"><%= error %></div>
+      <% } %>
       <label for="username"><b>Username</b></label>
       <input type="text" placeholder="Enter Username" name="username" required>
 
@@ -26,6 +29,9 @@
       <h3>Join Writer's Network</h3>
     </div>
     <form action="/register" method="post">
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="auth-error"><%= error %></div>
+      <% } %>
       <label for="username"><b>Choose a Username</b></label>
       <input type="text" placeholder="Enter Username" name="username" required>
 

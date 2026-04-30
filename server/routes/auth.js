@@ -28,12 +28,17 @@ router.get('/login', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
+    const locals = { title: "Login", description: "Simple Blog created with NodeJs, Express & MongoDb." };
     const user = await User.findOne({ username });
 
-    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+    if (!user) {
+      return res.render('login', { locals, layout: dashboardLayout, error: 'Invalid username or password.' });
+    }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) return res.status(401).json({ message: 'Invalid credentials' });
+    if (!isPasswordValid) {
+      return res.render('login', { locals, layout: dashboardLayout, error: 'Invalid username or password.' });
+    }
 
     const token = jwt.sign({ userId: user._id }, jwtSecret);
     res.cookie('token', token, { httpOnly: true });
@@ -41,7 +46,8 @@ router.post('/login', async (req, res) => {
     res.redirect('/dashboard');
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Internal server error' });
+    const locals = { title: "Login", description: "Simple Blog created with NodeJs, Express & MongoDb." };
+    res.render('login', { locals, layout: dashboardLayout, error: 'Something went wrong. Please try again.' });
   }
 });
 
@@ -55,13 +61,18 @@ router.post('/register', async (req, res) => {
       res.cookie('token', token, { httpOnly: true });
       res.redirect('/dashboard');
     } catch (error) {
-      if (error.code === 11000) res.status(409).json({ message: 'User already in use' });
-      else res.status(500).json({ message: 'Internal server error' });
+      const locals = { title: "Register", description: "Create an account" };
+      if (error.code === 11000) {
+        res.render('register', { locals, layout: dashboardLayout, error: 'Username is already taken. Please choose another.' });
+      } else {
+        res.render('register', { locals, layout: dashboardLayout, error: 'Something went wrong. Please try again.' });
+      }
       console.log(error);
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Internal server error' });
+    const locals = { title: "Register", description: "Create an account" };
+    res.render('register', { locals, layout: dashboardLayout, error: 'Something went wrong. Please try again.' });
   }
 });
 
