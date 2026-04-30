@@ -1,34 +1,95 @@
-<a href="/dashboard">&larr; Back</a>
-<div class="admin-title">
-  <h2>View / Edit Post</h2>
+<div class="composer">
 
-  <form action="/delete-post/<%= data._id %>?_method=DELETE" method="POST">
-    <input type="submit" value="Delete" class="btn-delete btn">
+  <a href="/dashboard" class="composer__back">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+    Back to Desk
+  </a>
+
+  <div class="composer__header">
+    <h2>Edit Post</h2>
+  </div>
+
+  <form action="/edit-post/<%= data._id %>?_method=PUT" method="POST" id="composer-form">
+    <div class="composer__card">
+
+      <div class="composer__field">
+        <label class="composer__label" for="title">Title</label>
+        <input type="text" name="title" id="title" class="composer__title-input" placeholder="Untitled piece..." value="<%= data.title %>" autocomplete="off" required>
+      </div>
+
+      <div class="composer__field">
+        <label class="composer__label" for="tags">Tags <span class="field-hint">Separate with commas</span></label>
+        <input type="text" name="tags" id="tags" class="composer__tags-input" placeholder="e.g. Technology, Lifestyle, AI" value="<%= data.tags ? data.tags.join(', ') : '' %>" autocomplete="off">
+      </div>
+
+      <hr class="composer__divider">
+
+      <div class="composer__field">
+        <label class="composer__label" for="body-editor">Content</label>
+        <textarea name="body" id="body-editor"><%= data.body %></textarea>
+      </div>
+
+    </div>
+
+    <div class="composer__actions">
+      <div class="composer__actions-left">
+        <span class="composer__word-count" id="word-count">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span id="word-count-value">0 words</span>
+        </span>
+      </div>
+      <div class="composer__actions-right">
+        <form action="/delete-post/<%= data._id %>?_method=DELETE" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this post? This action cannot be undone.')">
+          <button type="submit" class="composer__delete-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            Delete
+          </button>
+        </form>
+        <button type="submit" class="composer__submit-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+          Update
+        </button>
+      </div>
+    </div>
   </form>
 
 </div>
 
-<form action="/edit-post/<%= data._id %>?_method=PUT" method="POST">
-
-  <label for="title"><b>Title</b></label>
-  <input type="text" placeholder="Post Title" name="title" value="<%= data.title %>">
-
-  <label for="tags"><b>Tags</b> <span class="field-hint">(Separate with commas)</span></label>
-  <input type="text" placeholder="e.g. Technology, Lifestyle, AI" name="tags" value="<%= data.tags ? data.tags.join(', ') : '' %>">
-
-  <label for="body"><b>Content</b></label>
-  <textarea name="body" id="body-editor" cols="50" rows="10"><%= data.body %></textarea>
-
-  <button type="submit" class="btn">Update</button>
-
-</form>
-
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    new EasyMDE({ 
+    const easyMDE = new EasyMDE({ 
       element: document.getElementById('body-editor'),
       spellChecker: false,
-      status: false
+      status: false,
+      placeholder: "Start writing your story...",
+      minHeight: "360px",
+      autoDownloadFontAwesome: true,
+      toolbar: [
+        "bold", "italic", "heading", "|",
+        "quote", "unordered-list", "ordered-list", "|",
+        "link", "image", "|",
+        "preview", "side-by-side", "fullscreen", "|",
+        "guide"
+      ],
+      renderingConfig: {
+        singleLineBreaks: false,
+        codeSyntaxHighlighting: true
+      }
     });
+
+    // Live word count
+    const wordCountEl = document.getElementById('word-count-value');
+    function updateWordCount() {
+      const text = easyMDE.value().trim();
+      const words = text === '' ? 0 : text.split(/\s+/).length;
+      const readTime = Math.max(1, Math.ceil(words / 200));
+      wordCountEl.textContent = words + ' word' + (words !== 1 ? 's' : '') + ' · ' + readTime + ' min read';
+    }
+
+    easyMDE.codemirror.on('change', updateWordCount);
+    updateWordCount();
+
+    // Init floating bubble toolbar
+    initFloatingToolbar(easyMDE);
   });
 </script>

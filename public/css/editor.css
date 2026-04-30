@@ -1,0 +1,726 @@
+/* ══════════════════════════════════════════════════════════
+   WRITER STUDIO — Modern Editor Styles
+   Premium writing experience for blog authors
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Page-level animation ── */
+@keyframes composerFadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Composer Shell ── */
+.composer {
+  animation: composerFadeIn 0.5s ease both;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.composer__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  background: var(--surface-container-low);
+  transition: all var(--transition-fast);
+  margin-bottom: var(--space-6);
+}
+
+.composer__back:hover {
+  background: var(--surface-container);
+  color: var(--on-background);
+  transform: translateX(-2px);
+}
+
+.composer__back svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--transition-fast);
+}
+
+.composer__back:hover svg {
+  transform: translateX(-2px);
+}
+
+/* ── Header ── */
+.composer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+}
+
+.composer__header h2 {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--on-background);
+  margin: 0;
+}
+
+.composer__header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ── Card Body ── */
+.composer__card {
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-light);
+  border-radius: 14px;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 8px 32px rgba(0, 0, 0, 0.04);
+  transition: box-shadow var(--transition-slow);
+}
+
+.composer__card:focus-within {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 12px 48px rgba(0, 0, 0, 0.07);
+}
+
+/* ── Form Fields ── */
+.composer__field {
+  margin-bottom: var(--space-6);
+  position: relative;
+}
+
+.composer__field:last-of-type {
+  margin-bottom: 0;
+}
+
+.composer__label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 0.6rem;
+}
+
+.composer__label .field-hint {
+  font-weight: 400;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--text-muted);
+}
+
+/* Title Input — oversized, heading-style */
+.composer__title-input {
+  font-family: var(--font-heading) !important;
+  font-size: 1.85rem !important;
+  font-weight: 700 !important;
+  color: var(--on-background) !important;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  border: none !important;
+  border-bottom: none !important;
+  background: transparent !important;
+  padding: 0.5rem 0 !important;
+  margin-bottom: 0 !important;
+  width: 100%;
+  transition: none;
+}
+
+.composer__title-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.5;
+  font-weight: 500;
+}
+
+.composer__title-input:focus {
+  outline: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Tags Input — clean underline */
+.composer__tags-input {
+  font-family: var(--font-body) !important;
+  font-size: 0.95rem !important;
+  color: var(--on-background) !important;
+  border: none !important;
+  border-bottom: 1.5px solid var(--outline-light) !important;
+  background: transparent !important;
+  padding: 0.65rem 0 !important;
+  margin-bottom: 0 !important;
+  width: 100%;
+  transition: border-color var(--transition-fast) !important;
+}
+
+.composer__tags-input:focus {
+  outline: none !important;
+  border-bottom-color: var(--primary) !important;
+}
+
+.composer__tags-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* ── Divider ── */
+.composer__divider {
+  height: 1px;
+  background: var(--outline-light);
+  margin: var(--space-5) 0;
+  border: none;
+}
+
+/* ══════════════════════════════════════════════════════════
+   EasyMDE OVERRIDES — Premium Writing Surface
+   ══════════════════════════════════════════════════════════ */
+
+/* Container */
+.EasyMDEContainer {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* ── Toolbar ── */
+.EasyMDEContainer .editor-toolbar {
+  background: var(--surface-container-low) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 6px 8px !important;
+  margin-bottom: var(--space-3) !important;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  opacity: 1 !important;
+}
+
+.EasyMDEContainer .editor-toolbar::before,
+.EasyMDEContainer .editor-toolbar::after {
+  display: none !important;
+}
+
+/* Toolbar buttons */
+.EasyMDEContainer .editor-toolbar button {
+  width: 34px !important;
+  height: 34px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+  cursor: pointer;
+  transition: all 0.15s ease !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.EasyMDEContainer .editor-toolbar button:hover {
+  background: var(--surface-container) !important;
+  color: var(--on-background) !important;
+  transform: scale(1.08);
+}
+
+.EasyMDEContainer .editor-toolbar button.active {
+  background: var(--on-background) !important;
+  color: var(--background) !important;
+}
+
+/* Toolbar separator */
+.EasyMDEContainer .editor-toolbar i.separator {
+  width: 1px !important;
+  height: 20px !important;
+  background: var(--outline-light) !important;
+  border: none !important;
+  margin: 7px 6px !important;
+  display: inline-block;
+}
+
+/* Toolbar button icons */
+.EasyMDEContainer .editor-toolbar button i {
+  font-size: 14px !important;
+}
+
+/* Toolbar tooltips */
+.EasyMDEContainer .editor-toolbar button[title]::after {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+}
+
+/* Disabled toolbar on preview */
+.EasyMDEContainer .editor-toolbar.disabled-for-preview button:not(.no-disable) {
+  opacity: 0.3 !important;
+}
+
+/* ── CodeMirror (Writing Surface) ── */
+.EasyMDEContainer .CodeMirror {
+  border: 1.5px solid var(--outline-light) !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  padding: var(--space-5) !important;
+  min-height: 380px !important;
+  font-family: var(--font-body) !important;
+  font-size: 1.02rem !important;
+  line-height: 1.8 !important;
+  color: var(--on-background) !important;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast) !important;
+}
+
+.EasyMDEContainer .CodeMirror:focus-within,
+.EasyMDEContainer .CodeMirror-focused {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(92, 74, 58, 0.08) !important;
+}
+
+/* CodeMirror cursor */
+.EasyMDEContainer .CodeMirror-cursor {
+  border-left-color: var(--primary) !important;
+  border-left-width: 2px !important;
+}
+
+/* CodeMirror selected text */
+.EasyMDEContainer .CodeMirror-selected,
+.EasyMDEContainer .CodeMirror-selectedtext {
+  background: rgba(92, 74, 58, 0.1) !important;
+}
+
+/* CodeMirror placeholder */
+.EasyMDEContainer .CodeMirror .CodeMirror-placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.5;
+  font-style: italic;
+}
+
+/* CodeMirror gutters */
+.EasyMDEContainer .CodeMirror .CodeMirror-gutters {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Markdown syntax highlighting */
+.EasyMDEContainer .cm-header {
+  font-family: var(--font-heading) !important;
+  color: var(--on-background) !important;
+  font-weight: 700 !important;
+}
+
+.EasyMDEContainer .cm-header-1 { font-size: 1.6rem !important; }
+.EasyMDEContainer .cm-header-2 { font-size: 1.35rem !important; }
+.EasyMDEContainer .cm-header-3 { font-size: 1.15rem !important; }
+
+.EasyMDEContainer .cm-strong {
+  font-weight: 600 !important;
+  color: var(--on-background) !important;
+}
+
+.EasyMDEContainer .cm-em {
+  font-style: italic !important;
+  color: var(--text-secondary) !important;
+}
+
+.EasyMDEContainer .cm-link {
+  color: var(--accent) !important;
+  text-decoration: underline;
+}
+
+.EasyMDEContainer .cm-url {
+  color: var(--text-muted) !important;
+}
+
+.EasyMDEContainer .cm-quote {
+  color: var(--text-secondary) !important;
+  font-style: italic !important;
+  border-left: 3px solid var(--outline) !important;
+  padding-left: 0.75rem !important;
+}
+
+.EasyMDEContainer .cm-comment {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+  font-size: 0.9rem !important;
+  background: var(--surface-container-low) !important;
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+
+/* ── Preview Pane ── */
+.EasyMDEContainer .editor-preview,
+.EasyMDEContainer .editor-preview-side {
+  font-family: var(--font-body) !important;
+  font-size: 1.06rem !important;
+  line-height: 1.85 !important;
+  color: var(--on-background) !important;
+  background: var(--surface) !important;
+  padding: var(--space-6) !important;
+  border: 1.5px solid var(--outline-light) !important;
+  border-radius: 12px !important;
+}
+
+.EasyMDEContainer .editor-preview h1,
+.EasyMDEContainer .editor-preview h2,
+.EasyMDEContainer .editor-preview h3,
+.EasyMDEContainer .editor-preview-side h1,
+.EasyMDEContainer .editor-preview-side h2,
+.EasyMDEContainer .editor-preview-side h3 {
+  font-family: var(--font-heading) !important;
+  font-weight: 700;
+  color: var(--on-background);
+  margin-top: 1.5rem;
+}
+
+.EasyMDEContainer .editor-preview blockquote,
+.EasyMDEContainer .editor-preview-side blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 1.2rem 0;
+}
+
+.EasyMDEContainer .editor-preview code,
+.EasyMDEContainer .editor-preview-side code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.88rem;
+  background: var(--surface-container-low);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.EasyMDEContainer .editor-preview pre code,
+.EasyMDEContainer .editor-preview-side pre code {
+  display: block;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+/* Side-by-side mode */
+.EasyMDEContainer .editor-preview-side {
+  border-left: 1.5px solid var(--outline-light) !important;
+}
+
+.EasyMDEContainer .CodeMirror-sided {
+  border-right: none !important;
+  border-radius: 12px 0 0 12px !important;
+}
+
+/* ── Status Bar ── */
+.EasyMDEContainer .editor-statusbar {
+  padding: 0.6rem 0.5rem !important;
+  border-top: none !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.75rem !important;
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+}
+
+.EasyMDEContainer .editor-statusbar span {
+  font-family: var(--font-body) !important;
+  font-size: 0.75rem !important;
+  color: var(--text-muted) !important;
+}
+
+/* ── Fullscreen Mode ── */
+.EasyMDEContainer .editor-toolbar.fullscreen {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--outline-light) !important;
+  border-radius: 0 !important;
+  padding: 8px 16px !important;
+  z-index: 100;
+}
+
+.EasyMDEContainer .CodeMirror-fullscreen {
+  background: var(--surface) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: clamp(1rem, 4vw, 3rem) !important;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.EasyMDEContainer .editor-preview.editor-preview-full {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: clamp(1rem, 4vw, 3rem) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ACTION BAR
+   ══════════════════════════════════════════════════════════ */
+
+.composer__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-6);
+  padding-top: 0;
+  border-top: none;
+}
+
+.composer__actions-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.composer__actions-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Word count chip */
+.composer__word-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--surface-container-low);
+  padding: 0.35rem 0.85rem;
+  border-radius: 100px;
+  letter-spacing: 0.02em;
+}
+
+.composer__word-count svg {
+  width: 13px;
+  height: 13px;
+  opacity: 0.6;
+}
+
+/* Publish / Update button */
+.composer__submit-btn {
+  font-family: var(--font-body) !important;
+  background: var(--on-background) !important;
+  color: var(--background) !important;
+  border: none !important;
+  padding: 0.7rem 2rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: all var(--transition-fast) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.composer__submit-btn:hover {
+  background: var(--primary-hover) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+  transform: translateY(-1px) !important;
+}
+
+.composer__submit-btn:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Delete button in edit mode */
+.composer__delete-btn {
+  font-family: var(--font-body) !important;
+  background: transparent !important;
+  color: #b33a3a !important;
+  border: 1px solid rgba(179, 58, 58, 0.25) !important;
+  padding: 0.7rem 1.5rem !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.03em !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: all var(--transition-fast) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.composer__delete-btn:hover {
+  background: rgba(179, 58, 58, 0.06) !important;
+  border-color: rgba(179, 58, 58, 0.45) !important;
+  transform: translateY(-1px);
+}
+
+.composer__delete-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 720px) {
+  .composer__card {
+    padding: 1.25rem;
+    border-radius: 10px;
+  }
+
+  .composer__title-input {
+    font-size: 1.45rem !important;
+  }
+
+  .EasyMDEContainer .CodeMirror {
+    min-height: 280px !important;
+    padding: var(--space-4) !important;
+  }
+
+  .EasyMDEContainer .editor-toolbar {
+    padding: 4px 6px !important;
+  }
+
+  .EasyMDEContainer .editor-toolbar button {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .composer__actions {
+    flex-direction: column-reverse;
+    gap: var(--space-4);
+    align-items: stretch;
+  }
+
+  .composer__actions-left,
+  .composer__actions-right {
+    justify-content: center;
+  }
+
+  .composer__submit-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.85rem 2rem !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   FLOATING BUBBLE TOOLBAR — appears on text selection
+   ══════════════════════════════════════════════════════════ */
+
+.bubble-toolbar {
+  position: absolute;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #1e1b18;
+  padding: 5px 6px;
+  border-radius: 10px;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.28),
+    0 1px 4px rgba(0, 0, 0, 0.18);
+
+  /* Hidden by default */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px) scale(0.96);
+  transition:
+    opacity 0.18s ease,
+    visibility 0.18s ease,
+    transform 0.18s ease;
+
+  pointer-events: none;
+}
+
+.bubble-toolbar.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* ── Buttons ── */
+.bubble-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  position: relative;
+}
+
+.bubble-toolbar button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.bubble-toolbar button:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Tooltip on hover */
+.bubble-toolbar button::after {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+}
+
+.bubble-toolbar button:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ── Separator ── */
+.bubble-toolbar__sep {
+  display: inline-block;
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* ── Arrow / Caret pointing down ── */
+.bubble-toolbar__arrow {
+  position: absolute;
+  bottom: -5px;
+  width: 10px;
+  height: 10px;
+  background: #1e1b18;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 0 0 2px 0;
+  pointer-events: none;
+}
+
+/* ── SVG sizing inside buttons ── */
+.bubble-toolbar button svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
