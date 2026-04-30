@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const expressLayout = require('express-ejs-layouts');
 const methodOverride = require('method-override');
@@ -17,7 +18,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 const jwt = require('jsonwebtoken');
 
@@ -45,8 +46,9 @@ app.locals.isActiveRoute = isActiveRoute;
 
 app.use(expressLayout);
 app.use(methodOverride('_method'));
+app.set('views', path.join(__dirname, 'views'));
 app.set('layout', './layouts/main');
-app.set('view engine','ejs');
+app.set('view engine', 'ejs');
 
 app.use('/',require('./server/routes/main'));
 app.use('/',require('./server/routes/auth'));
