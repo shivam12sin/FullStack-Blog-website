@@ -102,7 +102,7 @@ router.put('/edit-post/:id', authMiddleware, async (req, res) => {
     await Post.findOneAndUpdate({ _id: req.params.id, author: req.userId }, {
       title: req.body.title, body: req.body.body, tags: tagsArray, updatedAt: Date.now()
     });
-    res.redirect(`/edit-post/${req.params.id}`);
+    res.redirect('/dashboard');
   } catch (error) {
     console.log(error);
     res.status(500).send('Internal server error');
