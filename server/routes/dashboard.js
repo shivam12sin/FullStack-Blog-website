@@ -69,7 +69,7 @@ router.post('/add-post', authMiddleware, async (req, res) => {
           from: `"Writer's Network" <${process.env.EMAIL_USER}>`,
           bcc: bccEmails,
           subject: `${author.username} published a new post: ${newPost.title}`,
-          text: `Hi there!\n\nThe author ${author.username} just published a highly anticipated new article titled "${newPost.title}".\n\nRead their latest thoughts here:\nhttp://localhost:5000/post/${newPost._id}\n\nHappy reading,\nWriter's Network Team`,
+          text: `Hi there!\n\nThe author ${author.username} just published a highly anticipated new article titled "${newPost.title}".\n\nRead their latest thoughts here:\n${process.env.SITE_URL || 'http://localhost:5050'}/post/${newPost._id}\n\nHappy reading,\nWriter's Network Team`,
         };
         // Run asynchronously so it doesn't block the routing sequence
         transporter.sendMail(mailOptions).catch(err => console.error('Email dispatch failed:', err));
