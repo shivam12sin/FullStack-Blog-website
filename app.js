@@ -56,6 +56,11 @@ app.use((req, res) => {
   res.status(404).render('404', { locals: { title: "404 Not Found", description: "Page not found." }, currentRoute: req.path });
 });
 
-app.listen(PORT,()=>{
-  console.log(`App listening on port ${PORT}`);
-})
+// Only listen when run directly (local dev), not when imported by Vercel
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`App listening on port ${PORT}`);
+  });
+}
+
+module.exports = app;
