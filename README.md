@@ -1,91 +1,94 @@
+# Writer's Network
 
-# Full Stack Blog Website
+A modern publishing platform built for focus, designed for reading.
+"Quiet publishing for loud ideas."
 
-Modern publishing platform built with Node.js, Express, MongoDB, and EJS. The current release includes the “Living Manuscript” design system featuring parchment-inspired surfaces, serif typography, and asymmetrical layouts tailored for long-form reading.
+## Overview
 
-## Live Demo
+This is a production-grade, full-stack blog application built with Node.js, Express, MongoDB, and EJS. It provides a complete editorial workflow tailored for long-form reading and writing.
 
-- https://fullstack-blog-website-4.onrender.com
+The UI follows an elegant, minimalist design system that prioritizes readability, beautiful typography, and distraction-free content consumption.
 
-## Key Features
+## Table of Contents
+- [Features](#features)
+- [Design Philosophy](#design-philosophy)
+- [Architecture & Tech Stack](#architecture--tech-stack)
+- [Environment Variables](#environment-variables)
+- [Local Development](#local-development)
+- [Deployment](#deployment)
+- [Maintainer](#maintainer)
 
-- JWT-based authentication with protected dashboard routes
-- Full CRUD workflow for posts, authors, and comments
-- Markdown-to-HTML rendering for article bodies
-- Living Manuscript UI: layered parchment textures, dual-serif typography, glassmorphic search, sepia-treated media
-- MongoDB connection with automatic in-memory fallback when `MONGODB_URI` is not defined (useful for local preview)
-- ESLint flat-config setup (`npm run lint`) to enforce consistent style
+## Features
+- **Writer Studio**: A premium, distraction-free markdown editing environment using EasyMDE with live word counts, read-time estimation, and a floating bubble toolbar.
+- **Subscription Engine**: Readers can follow their favorite authors. When an author publishes a new post, all followers automatically receive an email notification.
+- **Authentication**: Secure JWT-based authentication system stored in http-only cookies, fully compatible with serverless environments.
+- **Editorial Workflow**: Full CRUD operations for posts, authors, and comments.
+- **Serverless Ready**: Fully configured to deploy seamlessly on Vercel's serverless architecture.
 
-## Technology Stack
+## Design Philosophy
+The UI emphasizes a "Living Manuscript" aesthetic:
 
-- Node.js 20+
-- Express 5
-- MongoDB / Mongoose 8
-- EJS templates with express-ejs-layouts
-- JWT + bcrypt for authentication and password hashing
-- mongodb-memory-server for development fallback
-- Vanilla CSS for the design system enhancements
+1. **Focus on Typography**
+   - Elegant dual-serif typography tailored for long-form prose.
+   - JetBrains Mono is utilized within the Writer Studio for a focused, typewriter-like drafting experience.
 
-## Project Structure
+2. **Subtle Interactions**
+   - Clean, asymmetrical grid layouts.
+   - Minimalist navigation that stays out of the way of the content.
 
-```
-├── public/
-│   ├── css/
-│   ├── img/
-│   └── js/
-├── server/
-│   ├── config/
-│   ├── helpers/
-│   ├── models/
-│   └── routes/
-├── views/
-│   ├── layouts/
-│   ├── partials/
-│   └── user/
-├── app.js
-├── eslint.config.cjs
-├── package.json
-└── README.md
-```
+## Architecture & Tech Stack
+- **Backend**: Node.js, Express
+- **Database**: MongoDB Atlas / Mongoose
+- **View Engine**: EJS templates with `express-ejs-layouts`
+- **Security**: JWT + bcrypt for authentication and password hashing
+- **Email Delivery**: Nodemailer
+- **Styling**: Vanilla CSS enforcing a strict, customized design system
+- **Hosting**: Vercel Serverless Functions
 
 ## Environment Variables
-
 Create a `.env` file in the project root. At minimum set:
 
-```
-JWT_SECRET=your_jwt_secret
-MONGODB_URI=mongodb_connection_string (optional for local preview)
-PORT=5050
-EMAIL_USER=sender@example.com (required for support form)
-EMAIL_PASS=app_specific_password
-```
+```env
+# Server & Database
+PORT=5000
+MONGODB_URI=your_mongodb_atlas_connection_string
 
-When `MONGODB_URI` is omitted, the server starts an ephemeral MongoDB instance using `mongodb-memory-server`. Use a real database for production deployments.
+# Authentication
+JWT_SECRET=your_secure_jwt_secret
+
+# Email Notifications (Nodemailer)
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_specific_password
+
+# Deployment URL (Used for generating email links)
+SITE_URL=http://localhost:5000
+```
 
 ## Local Development
 
 ```bash
+# Clone the repository
 git clone https://github.com/shivam12sin/FullStack-Blog-website.git
 cd FullStack-Blog-website
+
+# Install dependencies
 npm install
-cp .env.example .env   # create and edit if an example file exists
-npm start               # runs on http://localhost:5050
+
+# Setup environment variables
+cp .env.example .env
+
+# Run the server (http://localhost:5000)
+npm run dev
 ```
 
-### Available Scripts
+## Deployment
 
-| Command        | Description                                  |
-| -------------- | -------------------------------------------- |
-| `npm start`    | Runs the server with the configured database |
-| `npm run dev`  | Starts the server with nodemon               |
-| `npm run lint` | Lints the project using ESLint flat config   |
+This project is optimized for deployment on **Vercel**.
 
-## Deployment Notes
-
-- Set the `PORT`, `MONGODB_URI`, `JWT_SECRET`, and email credentials in the hosting environment.
-- Disable the in-memory Mongo fallback in production by always providing `MONGODB_URI`.
-- The UI relies on hosted texture assets; self-host them if your deployment restricts external requests.
+1. Import your GitHub repository into Vercel.
+2. In the Vercel project settings, add all of your Environment Variables (`MONGODB_URI`, `JWT_SECRET`, `EMAIL_USER`, `EMAIL_PASS`, and set `SITE_URL` to your Vercel production domain).
+3. The included `vercel.json` and `api/index.js` wrapper will automatically handle routing the Express app through Vercel's Serverless Functions.
+4. Deploy!
 
 ## Maintainer
-
-Shivam Singh — [https://github.com/shivam12sin](https://github.com/shivam12sin)
+Shivam Singh — [GitHub Profile](https://github.com/shivam12sin)
