@@ -7,6 +7,11 @@ const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
 const dashboardLayout = '../views/layouts/dashboard';
 
+/**
+ * GET /login
+ * Renders the login/registration form. 
+ * If a valid JWT already exists, it auto-redirects to the dashboard.
+ */
 router.get('/login', async (req, res) => {
   try {
     const token = req.cookies.token;
@@ -25,6 +30,11 @@ router.get('/login', async (req, res) => {
   }
 });
 
+/**
+ * POST /login
+ * Authenticates a user by checking the database and verifying the bcrypt hash.
+ * On success, issues an HttpOnly JWT cookie.
+ */
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;

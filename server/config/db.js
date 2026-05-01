@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 let memoryServer;
 
+/**
+ * Resolves the MongoDB connection URI.
+ * If a MONGODB_URI is provided in the .env file, it uses that (intended for production).
+ * If no URI is provided, it spins up an ephemeral, in-memory MongoDB instance 
+ * using mongodb-memory-server (intended for quick local preview without setting up a DB).
+ */
 const resolveMongoUri = async () => {
   if (process.env.MONGODB_URI) {
     return process.env.MONGODB_URI;
@@ -15,6 +21,9 @@ const resolveMongoUri = async () => {
   return memoryServer.getUri();
 };
 
+/**
+ * Connects to the MongoDB database using Mongoose.
+ */
 const connectDB = async () => {
   try {
     mongoose.set('strictQuery', false);

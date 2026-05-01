@@ -21,6 +21,10 @@ const authMiddleware = (req, res, next) => {
   }
 }
 
+/**
+ * GET /dashboard
+ * Protected route that fetches and displays the currently logged-in user's posts.
+ */
 router.get('/dashboard', authMiddleware, async (req, res) => {
   try {
     const locals = { title: "Dashboard", description: "Simple Blog created with NodeJs, Express & MongoDb." };
@@ -32,6 +36,10 @@ router.get('/dashboard', authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * GET /add-post
+ * Renders the markdown editor to create a new post.
+ */
 router.get('/add-post', authMiddleware, async (req, res) => {
   try {
     const locals = { title: "Add Post", description: "..." };
@@ -42,6 +50,12 @@ router.get('/add-post', authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * POST /add-post
+ * Handles new post submission. Creates the post in the database.
+ * If the author has followers, triggers the asynchronous email notification pipeline
+ * to alert subscribers of the new content.
+ */
 router.post('/add-post', authMiddleware, async (req, res) => {
   try {
     if (!req.body.title || !req.body.body || req.body.title.trim() === '' || req.body.body.trim() === '') {
@@ -82,6 +96,11 @@ router.post('/add-post', authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * GET /edit-post/:id
+ * Fetches a specific post by ID and verifies the current user is the author.
+ * Renders the markdown editor pre-filled with the post data.
+ */
 router.get('/edit-post/:id', authMiddleware, async (req, res) => {
   try {
     const locals = { title: "Edit Post", description: "..." };
@@ -94,6 +113,11 @@ router.get('/edit-post/:id', authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * PUT /edit-post/:id
+ * Updates an existing post in the database.
+ * Ensures that the requester is the original author of the post.
+ */
 router.put('/edit-post/:id', authMiddleware, async (req, res) => {
   try {
     const rawTags = req.body.tags || '';
@@ -109,6 +133,10 @@ router.put('/edit-post/:id', authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * DELETE /delete-post/:id
+ * Removes a post from the database, verifying the user is the author.
+ */
 router.delete('/delete-post/:id', authMiddleware, async (req, res) => {
   try {
     await Post.deleteOne({ _id: req.params.id, author: req.userId });
@@ -118,6 +146,10 @@ router.delete('/delete-post/:id', authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * GET /profile
+ * Renders the user profile settings page where they can update bio and email.
+ */
 router.get('/profile', authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.userId).lean();
@@ -129,6 +161,10 @@ router.get('/profile', authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * PUT /profile
+ * Updates the current user's profile settings (bio, email) in the database.
+ */
 router.put('/profile', authMiddleware, async (req, res) => {
   try {
     await User.findByIdAndUpdate(req.userId, {
@@ -142,6 +178,11 @@ router.put('/profile', authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * POST /subscribe/:authorId
+ * Toggles the subscription status between the current user and an author.
+ * Modifies both the 'following' array of the user and the 'followers' array of the author.
+ */
 router.post('/subscribe/:authorId', authMiddleware, async (req, res) => {
   try {
     const authorId = req.params.authorId;

@@ -1,7 +1,11 @@
 const mongoose =  require('mongoose');
-
 const Schema  = mongoose.Schema;
 
+/**
+ * User Schema
+ * Represents an author or reader in the network.
+ * Handles authentication credentials and the follower/following relationship system.
+ */
 const userSchema = new Schema({
   username:{
     type:String,

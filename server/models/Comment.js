@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
 
+/**
+ * Comment Schema
+ * Represents a marginalia/discussion entry on a specific post.
+ * Links a user (author) to a specific Post.
+ */
 const commentSchema = new Schema({
   content: {
     type: String,

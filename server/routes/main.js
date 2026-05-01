@@ -1,5 +1,4 @@
 const express = require('express');
-// const { model } = require('mongoose');
 const router = express.Router();
 const Post = require('../models/post');
 const User = require('../models/user');
@@ -8,6 +7,11 @@ const nodemailer = require('nodemailer');
 const marked = require('marked');
 const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
+
+/**
+ * Authentication Middleware
+ * Checks for a valid JWT token in cookies. If missing or invalid, redirects to login.
+ */
 
 const authMiddleware = (req, res, next) => {
   const token = req.cookies.token;
@@ -25,6 +29,12 @@ const authMiddleware = (req, res, next) => {
 
 
 
+/**
+ * GET /
+ * Homepage - Retrieves paginated lists of posts.
+ * Includes data transformations for UI: excerpt generation (stripping markdown) 
+ * and reading time calculation.
+ */
 router.get('', async (req, res) => {
   try {
     const locals = {
@@ -76,6 +86,11 @@ router.get('', async (req, res) => {
 });
 
 
+/**
+ * GET /post/:id
+ * Single Post - Fetches a post by its ID, parses its Markdown body to HTML, 
+ * calculates reading time, and fetches associated comments.
+ */
 router.get('/post/:id', async (req, res) => {
   try {
     let slug = req.params.id;
@@ -114,6 +129,10 @@ router.get('/post/:id', async (req, res) => {
   }
 });
 
+/**
+ * POST /post/:id/comment
+ * Adds a new comment to a specific post. Protected by authMiddleware.
+ */
 router.post('/post/:id/comment', authMiddleware, async (req, res) => {
   try {
     const newComment = new Comment({
@@ -129,6 +148,10 @@ router.post('/post/:id/comment', authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * GET /tag/:tag
+ * Fetches and paginates posts associated with a specific tag.
+ */
 router.get('/tag/:tag', async (req, res) => {
   try {
     const rawTag = req.params.tag;
@@ -178,6 +201,10 @@ router.get('/tag/:tag', async (req, res) => {
   }
 });
 
+/**
+ * GET /author/:id
+ * Fetches an author's profile and all their published posts.
+ */
 router.get('/author/:id', async (req, res) => {
   try {
     const authorId = req.params.id;
@@ -215,6 +242,10 @@ router.get('/author/:id', async (req, res) => {
 });
 
 
+/**
+ * POST /search
+ * Executes a basic regex-based text search across post titles and bodies.
+ */
 router.post('/search', async (req, res) => {
   const locals = {
     title: "Search",
@@ -256,6 +287,10 @@ router.get('/support', (req, res) => {
   res.render('support');
 });
 
+/**
+ * POST /support
+ * Handles contact form submissions using Nodemailer to send emails.
+ */
 router.post('/support', async (req, res) => {
   const { name, email, message } = req.body;
 
