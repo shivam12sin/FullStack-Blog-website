@@ -90,5 +90,7 @@ This project is optimized for deployment on **Vercel**.
 3. The included `vercel.json` and `api/index.js` wrapper will automatically handle routing the Express app through Vercel's Serverless Functions.
 4. Deploy!
 
+**Live Demo**: [https://nodejs-ledger.vercel.app](https://nodejs-ledger.vercel.app)
+
 ## Maintainer
 Shivam Singh — [GitHub Profile](https://github.com/shivam12sin)
