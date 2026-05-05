@@ -13,15 +13,15 @@
   <p class="author__body"><%= author.bio || "This author hasn't written a biography yet." %></p>
 
   <% 
-    let isSubscribed = false;
+    let isFollowing = false;
     if (typeof userLoggedIn !== 'undefined' && userLoggedIn && typeof userId !== 'undefined' && author.followers.some(id => id.toString() === userId.toString())) {
-      isSubscribed = true;
+      isFollowing = true;
     }
   %>
   <% if (!(typeof userId !== 'undefined' && userId === author._id.toString())) { %>
-    <form action="/subscribe/<%= author._id %>" method="POST" class="subscribe-form">
-      <button type="submit" class="btn <%= isSubscribed ? 'btn--ghost' : '' %>">
-        <%= isSubscribed ? 'Subscribed' : 'Subscribe' %>
+    <form action="/subscribe/<%= author._id %>" method="POST" class="follow-form">
+      <button type="submit" class="btn <%= isFollowing ? 'btn--ghost' : '' %>">
+        <%= isFollowing ? 'Following' : 'Follow' %>
       </button>
     </form>
   <% } %>

@@ -54,7 +54,7 @@ router.get('/add-post', authMiddleware, async (req, res) => {
  * POST /add-post
  * Handles new post submission. Creates the post in the database.
  * If the author has followers, triggers the asynchronous email notification pipeline
- * to alert subscribers of the new content.
+ * to alert followers of the new content.
  */
 router.post('/add-post', authMiddleware, async (req, res) => {
   try {
@@ -80,10 +80,10 @@ router.post('/add-post', authMiddleware, async (req, res) => {
           },
         });
         const mailOptions = {
-          from: `"Writer's Network" <${process.env.EMAIL_USER}>`,
+          from: `"Candor" <${process.env.EMAIL_USER}>`,
           bcc: bccEmails,
           subject: `${author.username} published a new post: ${newPost.title}`,
-          text: `Hi there!\n\nThe author ${author.username} just published a highly anticipated new article titled "${newPost.title}".\n\nRead their latest thoughts here:\n${process.env.SITE_URL || 'http://localhost:5050'}/post/${newPost._id}\n\nHappy reading,\nWriter's Network Team`,
+          text: `Hi there!\n\nThe author ${author.username} just published a highly anticipated new article titled "${newPost.title}".\n\nRead their latest thoughts here:\n${process.env.SITE_URL || 'http://localhost:5050'}/post/${newPost._id}\n\nHappy reading,\nCandor Team`,
         };
         // Run asynchronously so it doesn't block the routing sequence
         transporter.sendMail(mailOptions).catch(err => console.error('Email dispatch failed:', err));
@@ -180,27 +180,27 @@ router.put('/profile', authMiddleware, async (req, res) => {
 
 /**
  * POST /subscribe/:authorId
- * Toggles the subscription status between the current user and an author.
+ * Toggles the follow status between the current user and an author.
  * Modifies both the 'following' array of the user and the 'followers' array of the author.
  */
 router.post('/subscribe/:authorId', authMiddleware, async (req, res) => {
   try {
     const authorId = req.params.authorId;
-    const subscriberId = req.userId;
+    const followerId = req.userId;
 
-    if (authorId === subscriberId) {
+    if (authorId === followerId) {
       return res.redirect('back');
     }
 
-    const user = await User.findById(subscriberId);
-    const isSubscribed = user.following.includes(authorId);
+    const user = await User.findById(followerId);
+    const isFollowing = user.following.includes(authorId);
 
-    if (isSubscribed) {
-      await User.findByIdAndUpdate(subscriberId, { $pull: { following: authorId } });
-      await User.findByIdAndUpdate(authorId, { $pull: { followers: subscriberId } });
+    if (isFollowing) {
+      await User.findByIdAndUpdate(followerId, { $pull: { following: authorId } });
+      await User.findByIdAndUpdate(authorId, { $pull: { followers: followerId } });
     } else {
-      await User.findByIdAndUpdate(subscriberId, { $addToSet: { following: authorId } });
-      await User.findByIdAndUpdate(authorId, { $addToSet: { followers: subscriberId } });
+      await User.findByIdAndUpdate(followerId, { $addToSet: { following: authorId } });
+      await User.findByIdAndUpdate(authorId, { $addToSet: { followers: followerId } });
     }
 
     res.redirect(`/author/${authorId}`);

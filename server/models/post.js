@@ -3,7 +3,7 @@ const Schema  = mongoose.Schema;
 
 /**
  * Post Schema
- * Represents a blog article in the Writer's Network.
+ * Represents a blog article in Candor.
  * Supports markdown content, tagging, and references an author.
  */
 const postSchema = new Schema({

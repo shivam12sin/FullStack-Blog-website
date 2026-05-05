@@ -1,4 +1,4 @@
-# Writer's Network
+# Candor
 
 A modern publishing platform built for focus, designed for reading.
 "Quiet publishing for loud ideas."
@@ -19,7 +19,7 @@ The UI follows an elegant, minimalist design system that prioritizes readability
 - [Maintainer](#maintainer)
 
 ## Features
-- **Writer Studio**: A premium, distraction-free markdown editing environment using EasyMDE with live word counts, read-time estimation, and a floating bubble toolbar.
+- **Candor Studio**: A premium, distraction-free markdown editing environment using EasyMDE with live word counts, read-time estimation, and a floating bubble toolbar.
 - **Subscription Engine**: Readers can follow their favorite authors. When an author publishes a new post, all followers automatically receive an email notification.
 - **Authentication**: Secure JWT-based authentication system stored in http-only cookies, fully compatible with serverless environments.
 - **Editorial Workflow**: Full CRUD operations for posts, authors, and comments.
@@ -30,7 +30,7 @@ The UI emphasizes a "Living Manuscript" aesthetic:
 
 1. **Focus on Typography**
    - Elegant dual-serif typography tailored for long-form prose.
-   - JetBrains Mono is utilized within the Writer Studio for a focused, typewriter-like drafting experience.
+   - JetBrains Mono is utilized within Candor Studio for a focused, typewriter-like drafting experience.
 
 2. **Subtle Interactions**
    - Clean, asymmetrical grid layouts.
