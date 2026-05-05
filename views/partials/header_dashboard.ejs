@@ -1,19 +1,25 @@
 <header class="header">
-  <a href="/dashboard" class="header__logo">Candor <span class="mode-badge">Write</span></a>
+  <a href="<%= (typeof userLoggedIn !== 'undefined' && userLoggedIn) ? '/dashboard' : '/' %>" class="header__logo">Candor <span class="mode-badge">Write</span></a>
 
   <nav class="header__nav">
     <ul>
       <li>
         <a href="/" class="">Home</a>
       </li>
+      <% if (typeof userLoggedIn !== 'undefined' && userLoggedIn) { %>
       <li>
         <a href="/profile" class="<%= typeof currentRoute !== 'undefined' ? isActiveRoute('/profile', currentRoute) : '' %>">Profile</a>
       </li>
+      <% } %>
     </ul>
   </nav>
 
   <div class="header__button">
-    <a href="/logout">logout</a>
+    <% if (typeof userLoggedIn !== 'undefined' && userLoggedIn) { %>
+      <a href="/logout">logout</a>
+    <% } else { %>
+      <a href="/login">Sign In</a>
+    <% } %>
   </div>
 
 

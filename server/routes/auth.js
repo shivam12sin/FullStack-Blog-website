@@ -37,7 +37,8 @@ router.get('/login', async (req, res) => {
  */
 router.post('/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const username = req.body.username.toLowerCase().trim();
+    const password = req.body.password;
     const locals = { title: "Login", description: "Simple Blog created with NodeJs, Express & MongoDb." };
     const user = await User.findOne({ username });
 
@@ -63,7 +64,8 @@ router.post('/login', async (req, res) => {
 
 router.post('/register', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const username = req.body.username.toLowerCase().trim();
+    const password = req.body.password;
     const hashedPassword = await bcrypt.hash(password, 10);
     try {
       const user = await User.create({ username, password: hashedPassword });
@@ -73,16 +75,16 @@ router.post('/register', async (req, res) => {
     } catch (error) {
       const locals = { title: "Register", description: "Create an account" };
       if (error.code === 11000) {
-        res.render('register', { locals, layout: dashboardLayout, error: 'Username is already taken. Please choose another.' });
+        res.render('login', { locals, layout: dashboardLayout, error: 'Username is already taken. Please choose another.', authMode: 'register' });
       } else {
-        res.render('register', { locals, layout: dashboardLayout, error: 'Something went wrong. Please try again.' });
+        res.render('login', { locals, layout: dashboardLayout, error: 'Something went wrong. Please try again.', authMode: 'register' });
       }
       console.log(error);
     }
   } catch (error) {
     console.log(error);
     const locals = { title: "Register", description: "Create an account" };
-    res.render('register', { locals, layout: dashboardLayout, error: 'Something went wrong. Please try again.' });
+    res.render('login', { locals, layout: dashboardLayout, error: 'Something went wrong. Please try again.', authMode: 'register' });
   }
 });
 

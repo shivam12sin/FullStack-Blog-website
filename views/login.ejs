@@ -1,5 +1,5 @@
 <div class="auth-container auth-stack">
-  <div id="loginSection" class="auth-panel">
+  <div id="loginSection" class="auth-panel <%= typeof authMode !== 'undefined' && authMode === 'register' ? 'is-hidden' : '' %>">
     <div class="section-heading">
 
       <h3>Sign in to Candor</h3>
@@ -23,7 +23,7 @@
     </div>
   </div>
 
-  <div id="registerSection" class="auth-panel is-hidden">
+  <div id="registerSection" class="auth-panel <%= typeof authMode !== 'undefined' && authMode === 'register' ? '' : 'is-hidden' %>">
     <div class="section-heading">
 
       <h3>Join Candor</h3>

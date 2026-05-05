@@ -31,20 +31,29 @@ const authMiddleware = (req, res, next) => {
 
 /**
  * GET /
- * Homepage - Retrieves paginated lists of posts.
+ * Homepage - Retrieves posts sorted by upvote count (most upvoted first).
  * Includes data transformations for UI: excerpt generation (stripping markdown) 
  * and reading time calculation.
  */
 router.get('', async (req, res) => {
   try {
     const locals = {
-      title: "Node js Blog",
-      description: "Simple Blog created with Nodejs,Express & MongoDb."
+      title: "Candor",
+      description: "Discover ideas, stories, and expertise from writers everywhere."
     }
     let perPage = 10;
-    let page = req.query.page || 1;
+    let page = parseInt(req.query.page) || 1;
 
-    const data = await Post.find().sort({ createdAt: -1 }).skip(perPage * page - perPage).limit(perPage).populate('author', 'username').lean().exec();
+    // Use aggregation to sort by upvote count (most upvoted first)
+    const data = await Post.aggregate([
+      { $addFields: { upvoteCount: { $size: { $ifNull: ['$upvotes', []] } } } },
+      { $sort: { upvoteCount: -1, createdAt: -1 } },
+      { $skip: perPage * page - perPage },
+      { $limit: perPage },
+      { $lookup: { from: 'users', localField: 'author', foreignField: '_id', as: 'author' } },
+      { $unwind: { path: '$author', preserveNullAndEmptyArrays: true } },
+      { $project: { title: 1, body: 1, tags: 1, upvotes: 1, upvoteCount: 1, createdAt: 1, updatedAt: 1, 'author._id': 1, 'author.username': 1 } }
+    ]);
 
     // Enrich each post with reading time and excerpt
     data.forEach(post => {
@@ -66,12 +75,10 @@ router.get('', async (req, res) => {
     });
 
     const count = await Post.countDocuments({});
-    const nextPage = parseInt(page) + 1;
+    const nextPage = page + 1;
     const hasNextPage = nextPage <= Math.ceil(count / perPage);
 
 
-
-    res.set('Cache-Control', 'public, max-age=60'); // Keep in cache for 60 seconds
     res.render('index', {
       locals,
       data,
@@ -100,6 +107,18 @@ router.get('/post/:id', async (req, res) => {
 
     const comments = await Comment.find({ post: slug }).populate('author', 'username').sort({ createdAt: -1 }).lean();
 
+    // Check if current user has upvoted this post
+    let hasUpvoted = false;
+    const token = req.cookies.token;
+    let currentUserId = null;
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, jwtSecret);
+        currentUserId = decoded.userId;
+        hasUpvoted = data.upvotes && data.upvotes.some(id => id.toString() === currentUserId);
+      } catch (e) { /* token invalid, ignore */ }
+    }
+
     const locals = {
       title: data.title,
       description: "Simple Blog created with NodeJs, Express & MongoDb.",
@@ -113,19 +132,49 @@ router.get('/post/:id', async (req, res) => {
     const wordCount = data.body ? data.body.split(/\s+/).length : 0;
     const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
-    res.set('Cache-Control', 'public, max-age=300'); // Cache static content for 5 minutes
+
     res.render('post', {
       locals,
-      content, // pass HTML content
+      content,
       data,
       comments,
       readingTime,
+      hasUpvoted,
+      upvoteCount: data.upvotes ? data.upvotes.length : 0,
       currentRoute: `/post/${slug}`
     });
 
   } catch (error) {
     console.log(error);
     res.status(500).send('Internal Server Error');
+  }
+});
+
+/**
+ * POST /post/:id/upvote
+ * Toggles the upvote status for a logged-in user on a given post.
+ * If the user already upvoted, it removes the upvote. Otherwise, it adds one.
+ */
+router.post('/post/:id/upvote', authMiddleware, async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const userId = req.userId;
+
+    const post = await Post.findById(postId);
+    if (!post) return res.redirect('/');
+
+    const alreadyUpvoted = post.upvotes.includes(userId);
+
+    if (alreadyUpvoted) {
+      await Post.findByIdAndUpdate(postId, { $pull: { upvotes: userId } });
+    } else {
+      await Post.findByIdAndUpdate(postId, { $addToSet: { upvotes: userId } });
+    }
+
+    res.redirect(`/post/${postId}`);
+  } catch (error) {
+    console.log(error);
+    res.redirect('/');
   }
 });
 

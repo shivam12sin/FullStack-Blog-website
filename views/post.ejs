@@ -14,11 +14,32 @@
       <% }) %>
     </div>
   <% } %>
+
 </section>
 
 <article class="article article-body">
   <%- content %>
 </article>
+
+  <div class="upvote-bar" style="margin-bottom: 2rem;">
+    <% if (typeof userId !== 'undefined' && userId) { %>
+      <form action="/post/<%= data._id %>/upvote" method="POST" class="upvote-form">
+        <button type="submit" class="upvote-btn <%= hasUpvoted ? 'upvoted' : '' %>" aria-label="Upvote this post">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 4L3 15h6v5h6v-5h6L12 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="<%= hasUpvoted ? 'currentColor' : 'none' %>"/>
+          </svg>
+          <span><%= upvoteCount %></span>
+        </button>
+      </form>
+    <% } else { %>
+      <a href="/login" class="upvote-btn upvote-btn--disabled" aria-label="Log in to upvote">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4L3 15h6v5h6v-5h6L12 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+        <span><%= upvoteCount %></span>
+      </a>
+    <% } %>
+  </div>
 
 <section class="comments-section">
   <div class="section-heading">

@@ -30,6 +30,7 @@ const jwt = require('jsonwebtoken');
 // Global middleware to check for authentication state on every request
 // Sets variables in res.locals so they are available in all EJS templates
 app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store');
   res.locals.currentRoute = req.path;
   res.locals.userLoggedIn = false;
   

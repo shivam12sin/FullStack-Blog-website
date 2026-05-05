@@ -8,7 +8,7 @@
 <section class="articles ledger">
   <div class="articles__heading">
 
-    <h2>Latest Posts</h2>
+    <h2>Top Stories</h2>
   </div>
   <ul class="article-ul">
     <% data.forEach(post => { %>
@@ -30,12 +30,18 @@
         </div>
       <% } %>
       <div class="article-card__meta">
-        <span class="label-md">Recorded <%= post.createdAt.toDateString() %> · <%= post.readingTime %> min read</span>
+        <span class="label-md">Published <%= post.createdAt.toDateString() %> · <%= post.readingTime %> min read</span>
+        <span class="upvote-badge" title="Upvotes">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 4L3 15h6v5h6v-5h6L12 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <%= post.upvoteCount || 0 %>
+        </span>
       </div>
     </li>
     <% }) %>
   </ul>
   <% if (nextPage!==null) { %>
-    <a href="/?page=<%= nextPage%>" class="pagination">View Older Entries</a>
+    <a href="/?page=<%= nextPage%>" class="pagination">View More Posts</a>
   <% } %>
 </section>

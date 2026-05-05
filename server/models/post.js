@@ -25,6 +25,10 @@ const postSchema = new Schema({
     trim: true,
     lowercase: true
   }],
+  upvotes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   createdAt:{
     type:Date,
     default: Date.now
@@ -33,6 +37,11 @@ const postSchema = new Schema({
     type:Date,
     default: Date.now
   }
+});
+
+// Virtual for upvote count (used in sorting via aggregation)
+postSchema.virtual('upvoteCount').get(function() {
+  return this.upvotes ? this.upvotes.length : 0;
 });
 
 // Indexes for significantly faster sorting and filtering
