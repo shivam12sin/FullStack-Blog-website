@@ -562,18 +562,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: var(--space-5);
 }
 
-/* Drop Cap — spans ~3 lines for an editorial feel */
-.article-body p:first-of-type::first-letter {
-  font-family: var(--font-heading);
-  font-size: 4.2rem;
-  float: left;
-  line-height: 0.78;
-  margin-right: 0.5rem;
-  margin-top: 0.1rem;
-  padding-right: 0.05rem;
-  color: var(--on-background);
-  font-weight: 900;
-}
+
 
 /* ── Section Headings ── */
 .section-heading {
